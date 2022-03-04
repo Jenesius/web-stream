@@ -5,6 +5,8 @@
     "module": "CommonJS",
     "moduleResolution": "node",
 
+    "downlevelIteration": true,
+
     "esModuleInterop": true,
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,
