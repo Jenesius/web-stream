@@ -3,9 +3,15 @@ import http from "http";
 import path from "path";
 //import roomRouter from './routes/room-route';
 import connectSocket from "./socket";
+import detenv from "dotenv";
+detenv.config({
+    path: path.join(__dirname, '..', '.env')
+});
 
 const app = express();
 const server = http.createServer(app);
+
+process.env["PROJECT_DIR"] = path.join(__dirname, '..');
 
 // @ts-ignore
 const io = connectSocket(server);
@@ -23,6 +29,7 @@ app.get('/page', (_req, res) => {
 server.listen(config.port,  () => {
     console.log('Server run on', config.port);
 })
+
 
 
 

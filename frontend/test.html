@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <script type="text/javascript">
+
+        /*BOB INIT*/
+        const bob = new RTCPeerConnection();
+        const channel = bob.createDataChannel('bob-channel');
+
+		channel.onopen = e => console.log('Channel was opened')
+
+        bob.onicecandidate = e => console.log('Bob', JSON.stringify(bob.localDescription))
+
+        /*ALICE INIT*/
+        const alice = new RTCPeerConnection();
+
+		alice.onicecandidate = e => console.log('Alice', JSON.stringify(alice.localDescription))
+
+        alice.ondatachannel = e => {
+			alice.channel = e.channel;
+
+			alice.channel.onopen = e => console.log('Opened')
+            alice.channel.onmessage = e => console.log('OnMessage', e.data);
+
+        }
+
+
+        bob.createOffer()
+        .then(offer => bob.setLocalDescription(offer)) // bob ->
+        .then(() => alice.setRemoteDescription(bob.localDescription)) // alice <-
+        .then(() => alice.createAnswer())
+        .then(answer => alice.setLocalDescription(answer)) // alice ->
+        .then(() => bob.setRemoteDescription(alice.localDescription))
+
+
+
+
+
+    </script>
+</body>
+</html>
