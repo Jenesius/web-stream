@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+    <h1>Alice</h1>
+
+    <textarea id = "input-offer"></textarea>
+    <button id = "button-accept">Accept</button>
+    <script type = 'text/javascript'>
+
+        const inputOffer = document.getElementById('input-offer');
+		const buttonAccept = document.getElementById('button-accept');
+
+		/******/
+
+        const alice = new RTCPeerConnection();
+
+		alice.ondatachannel = e => {
+			alice.channel = e.channel;
+			alice.channel.onopen = () => console.log('Chanel was opened.');
+			alice.channel.onmessage = ({data}) => console.log('Channel message:', data);
+        }
+
+		/*******/
+
+        buttonAccept.addEventListener('click', () => {
+
+			const offer = new RTCSessionDescription(JSON.parse(inputOffer.value));
+
+			alice.setRemoteDescription(offer)
+            .then(() => alice.createAnswer())
+            .then(answer => alice.setLocalDescription(answer))
+            .then(() => console.log(JSON.stringify(alice.localDescription)))
+
+        })
+
+
+
+    </script>
+</body>
+</html>

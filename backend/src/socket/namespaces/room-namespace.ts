@@ -58,21 +58,23 @@ export default (io: Server) => {
 
 	io.of('/peers').on('connection', socket => {
 
+		const ROOM_NAME = 'test';
 
+		/**
+		 * 1. Пользователь подключается к комнате
+		 * 2. Просим всех пользователей данной комнаты позвонить ему
+		 *
+		 * */
 		socket.on('peer:join', (() => {
 
-			socket.join('test');
+			socket.join(ROOM_NAME); // Join test room
 
-			/**
-			 * Всех, кто ранее был подключён - просим создать offer для звонка
-			 * */
-			Object.keys(peers).forEach(id => {
-				socket.broadcast.to('test').emit('peer:new-offer', {
-					clientId: socket.id
-				})
+			// Просим создать offer для clientId
+			socket.broadcast.to(ROOM_NAME).emit('peer:new-offer', {
+				clientId: socket.id
 			})
 
-			peers[socket.id] = socket;
+			peers[socket.id] = socket; // [TEST] подсоединяем в пирам
 		}))
 
 
@@ -86,6 +88,13 @@ export default (io: Server) => {
 			peers[clientId]?.emit('peer:offer', {offer, clientId: socket.id});
 		})
 
+		socket.on('peer:candidate', data => {
+			const {candidate, clientId} = data;
+
+			peers[clientId]?.emit('peer:candidate', {candidate, clientId: socket.id})
+
+		})
+
 		socket.on('peer:answer', data => {
 
 			const {answer, clientId} = data;
@@ -95,9 +104,10 @@ export default (io: Server) => {
 		})
 
 		socket.on('disconnect', () => {
+
 			delete peers[socket.id];
 
-			socket.broadcast.to('room').emit('peer:cancel-connection', {
+			socket.broadcast.to(ROOM_NAME).emit('peer:cancel-connection', {
 				clientId: socket.id
 			})
 

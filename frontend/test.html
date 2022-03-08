@@ -6,6 +6,14 @@
 </head>
 <body>
 
+    <h1>Bob</h1>
+
+    <button id = "button-start">start connect</button>
+
+    <textarea id = "input-answer"></textarea>
+    <button id = "button-accept">Accept answer</button>
+
+
     <script type="text/javascript">
 
         /*BOB INIT*/
@@ -14,29 +22,29 @@
 
 		channel.onopen = e => console.log('Channel was opened')
 
-        bob.onicecandidate = e => console.log('Bob', JSON.stringify(bob.localDescription))
+        //bob.onicecandidate = e => console.log('Bob', JSON.stringify(bob.localDescription))
 
-        /*ALICE INIT*/
-        const alice = new RTCPeerConnection();
+        /********/
+        const buttonStart  = document.getElementById('button-start');
+		const buttonAccept = document.getElementById('button-accept');
+		const inputAnswer  = document.getElementById('input-answer')
+        /********/
 
-		alice.onicecandidate = e => console.log('Alice', JSON.stringify(alice.localDescription))
+        buttonStart.addEventListener('click', () => {
 
-        alice.ondatachannel = e => {
-			alice.channel = e.channel;
+			bob.createOffer()
+            .then(offer => bob.setLocalDescription(offer))
+            .then(() => console.log(JSON.stringify(bob.localDescription)))
 
-			alice.channel.onopen = e => console.log('Opened')
-            alice.channel.onmessage = e => console.log('OnMessage', e.data);
+        })
 
-        }
+        buttonAccept.addEventListener('click', () => {
 
+			const answer = new RTCSessionDescription(JSON.parse(inputAnswer.value));
 
-        bob.createOffer()
-        .then(offer => bob.setLocalDescription(offer)) // bob ->
-        .then(() => alice.setRemoteDescription(bob.localDescription)) // alice <-
-        .then(() => alice.createAnswer())
-        .then(answer => alice.setLocalDescription(answer)) // alice ->
-        .then(() => bob.setRemoteDescription(alice.localDescription))
-
+			bob.setRemoteDescription(answer)
+			.then(() => console.log('Remote description set'))
+        })
 
 
 

@@ -9,6 +9,7 @@ export default class Room extends React.Component {
 		super(props);
 		
 		this.handleJoin = this.handleJoin.bind(this);
+		this.handleMessage = this.handleMessage.bind(this);
 	}
 
 
@@ -17,14 +18,23 @@ export default class Room extends React.Component {
 		let conf = {
 			iceServers: [
 				{
-					urls: 'stun:stun4.l.google.com:19302'
+					urls: "stun:openrelay.metered.ca:80"
 				},
 				{
-					urls: 'turn:numb.viagenie.ca:3478',
-					credential: 'jenesius1998',
-					username: 'lokargenia@gmail.com'
+					urls: "turn:openrelay.metered.ca:80",
+					username: "openrelayproject",
+					credential: "openrelayproject"
 				},
-
+				{
+					urls: "turn:openrelay.metered.ca:443",
+					username: "openrelayproject",
+					credential: "openrelayproject"
+				},
+				{
+					urls: "turn:openrelay.metered.ca:443?transport=tcp",
+					username: "openrelayproject",
+					credential: "openrelayproject"
+				}
 			]
 		}
 		conf = {};
@@ -32,28 +42,25 @@ export default class Room extends React.Component {
 		this.socket = new Socket('peers');
 		this.peers = {};
 		
-		window.peers = this.peers;
 		
 		// Создание peer(Мы инициаторы)
 		this.socket.on('peer:new-offer', data => {
 			const {clientId} = data
-			console.log(`Создаём новый offer. ${clientId}`, '-->');
+			console.log(`Создаём новый offer для %c${clientId}`, 'color: blue');
 			
-
 			
 			const pc = this.peers[clientId] = new RTCPeerConnection(conf);
 			
 			pc.onicecandidate = e => {
-				console.log(pc.localDescription);
-			}
-			pc.onicecandidateerror = e => {
-				console.log('Error', e);
+				this.socket.emit('peer:candidate', {
+					candidate: e.candidate,
+					clientId
+				})
 			}
 			
-			
-			const channel = pc.createDataChannel(`test-${clientId}`);
+			const channel = pc.channel= pc.createDataChannel(`test-${clientId}`);
 			channel.onopen = e => {
-				console.log(`Channel opened with ${clientId}`);
+				console.log(`Channel opened with %c${clientId}`, 'color: purple');
 			}
 			channel.onmessage = e => {
 				console.log(`From ${clientId}: `, e.data);
@@ -61,15 +68,23 @@ export default class Room extends React.Component {
 			
 			pc.createOffer()
 			.then(offer => pc.setLocalDescription(offer))
-			.then(() => console.log('Offer:', pc.localDescription))
 			.then(() => this.socket.emit('peer:offer', {
 				offer: pc.localDescription,
 				clientId
 			}))
+			
+		})
+		
+		this.socket.on('peer:candidate', data => {
+			
+			const {candidate, clientId} = data;
+			
+			this.peers[clientId].addIceCandidate(candidate)
 			.then(() => {
-				
-				console.log('Offer created.', JSON.stringify(pc.localDescription))
-				
+				console.log('Candidate add +')
+			})
+			.catch(err => {
+				console.log('Candiadte adding ERROR', err);
 			})
 			
 		})
@@ -79,29 +94,32 @@ export default class Room extends React.Component {
 			
 			
 			const {offer, clientId} = data
-			console.log('Отвечем на offer', '<--', '-->')
+			console.log(`Отвечем на offer от %c${clientId}`, 'color: green')
 
 			
 			const pc = this.peers[clientId] = new RTCPeerConnection(conf);
 			
 			pc.onicecandidate = e => {
-				console.log(pc.localDescription);
+				this.socket.emit('peer:candidate', {
+					candidate: e.candidate,
+					clientId
+				})
 			}
+			
+
 			pc.onicecandidateerror = e => {
 				console.log('Error', e);
 			}
 			
 			pc.ondatachannel = e => {
-				
 				pc.channel = e.channel;
 				
 				pc.channel.onopen = e => {
-					console.log('Channel opened with', clientId)
+					console.log(`Channel opened with %c${clientId}`, 'color: purple')
 				}
 				pc.channel.onmessage = e => {
-					clientId.log(`From ${clientId}:`, e.data);
+					console.log(`From ${clientId}:`, e.data);
 				}
-				
 			}
 			
 			pc.setRemoteDescription(offer)
@@ -111,13 +129,6 @@ export default class Room extends React.Component {
 				answer: pc.localDescription,
 				clientId
 			}))
-			.then(() => {
-				
-				console.log('set remote', offer);
-				console.log('create local', pc.localDescription);
-				
-				
-			})
 			
 		})
 		
@@ -127,21 +138,34 @@ export default class Room extends React.Component {
 			
 			const {answer, clientId} = data;
 			
-			console.log('Подписываем ответ');
+			console.log(`Подписываем answer для %c${clientId}`, 'color: green');
 			
 			this.peers[clientId].setRemoteDescription(answer)
-			.then(() => {
-				console.log('Seted remote', answer);
-			})
+
 		})
 
+		this.socket.on('peer:cancel-connection', data => {
+			const {clientId} = data;
+			
+			this.peers[clientId]?.close()
+			delete this.peers[clientId];
+
+		})
 		
 		
 	}
+	
+	
 	componentWillUnmount() {
 
 	}
-
+	handleMessage(){
+		Object.values(this.peers).forEach(peer => {
+			
+			peer.channel.send('WELCOME')
+			
+		})
+	}
 	handleJoin(){
 		
 		this.socket.emit('peer:join');
@@ -158,6 +182,8 @@ export default class Room extends React.Component {
 			
 				<button onClick={this.handleJoin}>join peer</button>
 			
+				<button onClick={this.handleMessage}>Set hi</button>
+				
 			</div>
 		)
 		
