@@ -1,10 +1,19 @@
 import './App.css';
-import Room from "../room/room";
+import {WidgetRoom} from "../room/room";
+import Test from "../test";
+
+import { BrowserRouter, Router, Route, Routes } from "react-router-dom";
+
 function App() {
 	return (
 		<div className="App">
 			<p>Default page</p>
-			<Room/>
+			
+			<Routes>
+				<Route path = "/rooms/:id" element = { <WidgetRoom/> }/>
+
+			</Routes>
+			
 		</div>
 	);
 }

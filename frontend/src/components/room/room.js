@@ -1,20 +1,29 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./room.css";
 
 import Socket from "../../assets/js/sockets/Socket";
+import {useParams} from "react-router-dom";
+import Room from "../../assets/js/room/Room";
+import UserScreen from "../user-screen/user-screen";
 
-export default class Room extends React.Component {
+
+class Room1 extends React.Component {
 
 	constructor(props) {
 		super(props);
 		
 		this.handleJoin = this.handleJoin.bind(this);
 		this.handleMessage = this.handleMessage.bind(this);
+		this.handleProvideTracks = this.handleProvideTracks.bind(this);
+		
+		this.video = React.createRef();
+		
 	}
 
 
 	
 	componentDidMount() {
+		return;
 		let conf = {
 			iceServers: [
 				{
@@ -57,6 +66,15 @@ export default class Room extends React.Component {
 					clientId
 				})
 			}
+			
+			pc.ontrack = (ev) => {
+				console.log('STREAM!', ev.streams)
+				if (ev.streams && ev.streams[0]) {
+					this.video.srcObject = ev.streams[0];
+				} else {
+					console.log('else')
+				}
+			};
 			
 			const channel = pc.channel= pc.createDataChannel(`test-${clientId}`);
 			channel.onopen = e => {
@@ -105,7 +123,14 @@ export default class Room extends React.Component {
 					clientId
 				})
 			}
-			
+			pc.ontrack = (ev) => {
+				console.log('STREAM!', ev.streams)
+				if (ev.streams && ev.streams[0]) {
+					this.video.srcObject = ev.streams[0];
+				} else {
+					console.log('else')
+				}
+			};
 
 			pc.onicecandidateerror = e => {
 				console.log('Error', e);
@@ -171,7 +196,20 @@ export default class Room extends React.Component {
 		this.socket.emit('peer:join');
 		
 	}
-
+	
+	async handleProvideTracks(){
+		
+		const gumStream = await navigator.mediaDevices.getUserMedia(
+			{video: true});
+		
+		for (const track of gumStream.getTracks()) {
+			Object.values(this.peers).forEach(pc => {
+				
+				pc.addTrack(track);
+			})
+		}
+	
+	}
 	
 	render(){
 		
@@ -184,8 +222,82 @@ export default class Room extends React.Component {
 			
 				<button onClick={this.handleMessage}>Set hi</button>
 				
+				<button onClick = {this.handleProvideTracks}>Provide video</button>
+				
+				<video ref = {this.video}/>
+				
 			</div>
 		)
 		
 	}
+}
+
+export function WidgetRoom() {
+	
+	const {id} = useParams();
+	const [count, setCount] = useState(0);
+	const [users, setUsers] = useState([]);
+	
+	let room;
+	
+	useEffect(() => {
+
+		document.title = `Room ${id}`;
+		// 1. Подключение к комнате
+		// 2. Подписаться на Звонок / Ответ / New Candidate / Подпись Ответа
+		room = new Room();
+		room.on('update', () => {
+			
+			console.log('Out update');
+			setUsers(Object.values(room.peers));
+			
+		})
+		window.room = room;
+		
+		// 3. Новый пользователь N
+		// 4. Пользоваель N покинул комнату
+		
+		// 5. Новое сообщение в чате
+		
+		
+		return () => {
+			console.log('Сброс')
+			
+			// -1. Отключение от комнаты
+			
+			// -2. Отключение от всех пиров
+		}
+	}, [id])
+	
+
+	/*
+	  Изменение конфигурации вызова
+	  
+	  1. Собщаем в комнату свои новые данные, подписываем, устанавливаем
+	   соединение и т.д.
+	
+	 
+	*/
+	
+
+	
+	async function toggleVideo() {
+		window.room.recall({video: true});
+		
+	}
+	
+	
+	return (
+		<div>
+			<p>Room with id {id}</p>
+			
+			<button onClick= {toggleVideo}>Video</button>
+			
+			
+			{
+				users.map(user => <UserScreen user = {user} key = {user.clientId} />)
+			}
+			
+		</div>
+	)
 }

@@ -1,8 +1,8 @@
-import React, {createRef} from "react";
-import TestVideo, {TestVideo1} from "../../assets/js/test-video";
-import TestProvider, {SimpleDownload} from "../../assets/js/test-provider";
+import React, {createRef, useEffect, useRef} from "react";
+import {SimpleDownload} from "../../assets/js/test-provider";
+import "./index.css";
 
-export default class UserScreen extends React.Component {
+ class UserScreen1 extends React.Component {
 	
 	constructor(props) {
 		super(props);
@@ -23,4 +23,30 @@ export default class UserScreen extends React.Component {
 			</video>
 		)
 	}
+}
+
+export default function UserScreen({user}) {
+	
+	 const video = useRef();
+	
+	 useEffect(() => {
+		 console.log(user, user.stream);
+		 if (user.stream)
+		 {
+			 console.log('+', video);
+			 video.current.srcObject = user.stream;
+			 
+		 }
+	 })
+	 
+
+	 
+	
+	 return (
+		 <div className= "user-screen">
+			 <video ref = {video} width="320" height="240" autoPlay controls/>
+
+		 </div>
+		 
+	 )
 }

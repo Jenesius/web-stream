@@ -107,7 +107,7 @@ export default (io: Server) => {
 
 			delete peers[socket.id];
 
-			socket.broadcast.to(ROOM_NAME).emit('peer:cancel-connection', {
+			socket.broadcast.to(ROOM_NAME).emit('peer:user-leave', {
 				clientId: socket.id
 			})
 
