@@ -30,10 +30,8 @@ export default function UserScreen({user}) {
 	 const video = useRef();
 	
 	 useEffect(() => {
-		 console.log(user, user.stream);
 		 if (user.stream)
 		 {
-			 console.log('+', video);
 			 video.current.srcObject = user.stream;
 			 
 		 }

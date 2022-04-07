@@ -247,10 +247,7 @@ export function WidgetRoom() {
 		// 2. Подписаться на Звонок / Ответ / New Candidate / Подпись Ответа
 		room = new Room();
 		room.on('update', () => {
-			
-			console.log('Out update');
-			setUsers(Object.values(room.peers));
-			
+			setUsers(Object.values(room.users));
 		})
 		window.room = room;
 		

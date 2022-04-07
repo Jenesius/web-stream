@@ -1,5 +1,7 @@
 import Socket from "../sockets/Socket";
-import EventEmitter from "../event-emitter/EventEmitter";
+import EventEmitter from "../event-emitter/EventEmitter.ts";
+import PeerConnectionService
+	from "../adapter-peer-connection/peer-connection-service.ts";
 
 export default class Room extends EventEmitter{
 	
@@ -35,157 +37,92 @@ export default class Room extends EventEmitter{
 		
 		this.socket.on('peer:user-leave', this.removeConnect.bind(this));
 		
-	}
-	
-	createNewOffer({clientId}){
-
-		console.log(`Создание нового offer для %c${clientId}`, 'color: blue');
-		
-		const pc = new RTCPeerConnection({});
-		
-		if (this.stream)
-		this.stream.getTracks().forEach(track => {
-			pc.addTrack(track, this.stream);
-			
-
-			
-			console.log(`Добавление дорожки к ${clientId}`)
+		this.users = new Proxy({}, {
+			set: (target, p, value) => {
+				
+				target[p] = value;
+				
+				this.emit('update');
+				
+				return true;
+			},
+			deleteProperty: (target, p) => {
+				
+				delete target[p];
+				this.emit('update');
+				
+				return true;
+			}
 		});
+	}
+	
+	setPeer(clientId, peer) {
+		if (!this.users[clientId]) this.users[clientId] = {clientId};
+		this.users[clientId].peer = peer;
+	}
+	getPeer(clientId) {
+		return this.users[clientId]?.peerConnection;
+	}
+	removeUser(clientId) {
+		delete this.users[clientId];
+	}
+	
+	handleTrack(clientId, e) {
+		console.log(`%cHandle track ${clientId}`, 'color: red', e);
+		this.users[clientId].stream = e.streams[0];
+		this.emit('update');
 		
-		this.peers[clientId] = {
-			peer: pc,
-			clientId
-		}
 		
-		pc.onicecandidate = e => {
-			this.socket.emit('peer:candidate', {
-				candidate: e.candidate,
-				clientId
-			})
-		}
+	}
+	
+	async createNewOffer({clientId}){
 		
-		// При получении данных
-		pc.ontrack = (ev) => {
-			console.log('STREAM!', ev.streams);
+		const tracks = this.getTracks();
+		console.log('Tracks', tracks);
+		const rtcConnection = await
+			PeerConnectionService.createOffer(this.socket, tracks, clientId, e => this.handleTrack(clientId, e), this.stream);
+		
 
-			/*
-			if (ev.streams && ev.streams[0]) {
-				this.video.srcObject = ev.streams[0];
-			} else {
-				console.log('else')
-			}
-			
-			 */
-		};
+		this.users[clientId] = rtcConnection;
+	}
+	
+	async onCandidate({candidate, clientId}){
 		
-		// Тест
-		const channel = pc.channel= pc.createDataChannel(`test-${clientId}`);
-		channel.onopen = e => {
-			console.log(`Channel opened with %c${clientId}`, 'color: purple');
-		}
-		channel.onmessage = e => {
-			console.log(`From ${clientId}: `, e.data);
-		}
+		await PeerConnectionService.addCandidate(this.getPeer(clientId), clientId, candidate);
+	}
+	
+	async createAnswer({offer, clientId}) {
+
+		const rtcConnection = await
+			PeerConnectionService.createAnswer(this.socket, this.getTracks(), clientId, offer, (e) => this.handleTrack(clientId, e), this.stream);
 		
-		pc.createOffer()
-		.then(offer => pc.setLocalDescription(offer))
-		.then(() => this.socket.emit('peer:offer', {
-			offer: pc.localDescription,
-			clientId
-		}))
+		this.users[clientId] = rtcConnection;
 		
 	}
 	
-	onCandidate(data){
-		const {candidate, clientId} = data;
-		
-		this.peers[clientId].peer.addIceCandidate(candidate)
-		.then(() => {
-			console.log('Candidate add +')
-		})
-		.catch(err => {
-			console.log('Candiadte adding ERROR', err);
-		})
+	async acceptCall({answer, clientId}){
+		await PeerConnectionService.applyAnswer(this.getPeer(clientId), clientId, answer);
 	}
 	
-	createAnswer(data) {
-		const {offer, clientId} = data;
-		console.log(`Отвечем на offer от %c${clientId}`, 'color: green')
-		
-		
-		const pc =  new RTCPeerConnection({});
-		if (this.streams)
-		this.streams.getTracks().forEach(track => pc.addTrack(track));
-		this.peers[clientId] = {
-			peer: pc,
-			clientId
-		}
-		
-		pc.onicecandidate = e => {
-			this.socket.emit('peer:candidate', {
-				candidate: e.candidate,
-				clientId
-			})
-		}
-		pc.ontrack = (ev) => {
-			console.log('STREAM!', ev);
-			console.log('STREAM!', ev.streams);
-			this.emit('update');
-			this.peers[clientId].stream = ev.streams[0];
-			
-			/*
-			if (ev.streams && ev.streams[0]) {
-				this.video.srcObject = ev.streams[0];
-			} else {
-				console.log('else')
-			}
-			
-			 */
-		};
-		
-		pc.onicecandidateerror = e => {
-			console.log('Error', e);
-		}
-		
-		pc.ondatachannel = e => {
-			pc.channel = e.channel;
-			
-			pc.channel.onopen = e => {
-				console.log(`Channel opened with %c${clientId}`, 'color: purple')
-			}
-			pc.channel.onmessage = e => {
-				console.log(`From ${clientId}:`, e.data);
-			}
-		}
-		
-		pc.setRemoteDescription(offer)
-		.then(() => pc.createAnswer())
-		.then(answer => pc.setLocalDescription(answer))
-		.then(() => this.socket.emit('peer:answer', {
-			answer: pc.localDescription,
-			clientId
-		}))
+	removeConnect({clientId}) {
+		PeerConnectionService.endConnection(this.getPeer(clientId), clientId);
+		this.removeUser(clientId);
 	}
 	
-	acceptCall(data){
-		const {answer, clientId} = data;
-		
-		console.log(`Подписываем answer для %c${clientId}`, 'color: green');
-		
-		this.peers[clientId].peer.setRemoteDescription(answer)
-	}
-	
-	removeConnect(data) {
-		const {clientId} = data;
-		
-		this.peers[clientId]?.peer.close()
-		delete this.peers[clientId];
+	/**
+	 * TEST methods
+	 * */
+	getTracks(){
+		return this.stream?.getTracks() || []
 	}
 	
 	async recall(constrains){
+		
+		console.log('++');
+		
 		this.stream = await navigator.mediaDevices.getUserMedia(constrains);
 		
-		Object.values(this.peers).forEach(elem => this.createNewOffer(elem));
+		Object.values(this.users).forEach(elem => this.createNewOffer(elem));
 		
 		return;
 		/*

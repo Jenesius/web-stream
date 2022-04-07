@@ -1,16 +1,20 @@
 export default class EventEmitter{
 	
+	events: {
+		[name: string]: Callback[]
+	} = {}
+	
 	constructor() {
 		this.events = {};
 	}
 	
-	on(name, callback) {
+	on(name: string, callback: Callback) {
 		if (!(name in this.events)) this.events[name] = [];
 		
 		this.events[name].push(callback);
 		
 	}
-	emit(name, data) {
+	emit(name: string, data: any) {
 		
 		if (! (name in this.events)) return;
 		
@@ -19,3 +23,5 @@ export default class EventEmitter{
 	}
 	
 }
+
+type Callback = (data?: any) => any | void
