@@ -5,6 +5,7 @@ import Socket from "../../assets/js/sockets/socket";
 import {useParams} from "react-router-dom";
 import Room from "../../assets/js/room/Room";
 import UserScreen from "../user-screen/user-screen";
+import RoomActionPanel from "../room-action-panel";
 
 
 class Room1 extends React.Component {
@@ -296,6 +297,8 @@ export function WidgetRoom() {
 			{
 				users.map(user => <UserScreen user = {user} key = {user._index} />)
 			}
+			
+			<RoomActionPanel/>
 			
 		</div>
 	)
