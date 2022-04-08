@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import "./room.css";
 
-import Socket from "../../assets/js/sockets/Socket";
+import Socket from "../../assets/js/sockets/socket";
 import {useParams} from "react-router-dom";
 import Room from "../../assets/js/room/Room";
 import UserScreen from "../user-screen/user-screen";
@@ -238,49 +238,50 @@ export function WidgetRoom() {
 	const [count, setCount] = useState(0);
 	const [users, setUsers] = useState([]);
 	
+	const [isVideo, setIsVideo] = useState(false);
+	const [isAudio, setIsAudio] = useState(false);
+	
 	let room;
 	
 	useEffect(() => {
 
 		document.title = `Room ${id}`;
-		// 1. Подключение к комнате
-		// 2. Подписаться на Звонок / Ответ / New Candidate / Подпись Ответа
+
 		room = new Room();
 		room.on('update', () => {
-			setUsers(Object.values(room.users));
+			
+			let v = Object.values(room.users).map(elem => {
+				
+				elem.hash = Math.floor(Math.random() % 1000);
+				return elem;
+			});
+			setUsers(v);
 		})
 		window.room = room;
-		
-		// 3. Новый пользователь N
-		// 4. Пользоваель N покинул комнату
-		
-		// 5. Новое сообщение в чате
-		
+
 		
 		return () => {
 			console.log('Сброс')
-			
-			// -1. Отключение от комнаты
-			
-			// -2. Отключение от всех пиров
+
 		}
 	}, [id])
 	
 
-	/*
-	  Изменение конфигурации вызова
-	  
-	  1. Собщаем в комнату свои новые данные, подписываем, устанавливаем
-	   соединение и т.д.
-	
-	 
-	*/
-	
+	useEffect(() => {
+		window.room.recall(getConstrains());
+	}, [isVideo, isAudio]);
 
-	
+	function getConstrains() {
+		return {
+			audio: isAudio,
+			video: isVideo
+		}
+	}
 	async function toggleVideo() {
-		window.room.recall({video: true});
-		
+		setIsVideo(a => !a);
+	}
+	async function toggleAudio() {
+		setIsAudio(a => !a);
 	}
 	
 	
@@ -288,11 +289,12 @@ export function WidgetRoom() {
 		<div>
 			<p>Room with id {id}</p>
 			
-			<button onClick= {toggleVideo}>Video</button>
+			<button onClick= {toggleVideo} className = {isVideo?'button_active':'button_inactive'}>video</button>
+			<button onClick= {toggleAudio} className = {isAudio?'button_active':'button_inactive'}>audio</button>
 			
 			
 			{
-				users.map(user => <UserScreen user = {user} key = {user.clientId} />)
+				users.map(user => <UserScreen user = {user} key = {user._index} />)
 			}
 			
 		</div>

@@ -1,6 +1,6 @@
 export default class EventEmitter{
 	
-	events: {
+	private events: {
 		[name: string]: Callback[]
 	} = {}
 	
@@ -13,8 +13,10 @@ export default class EventEmitter{
 		
 		this.events[name].push(callback);
 		
+		return this.off.bind(this, name, callback);
+		
 	}
-	emit(name: string, data: any) {
+	emit(name: string, data?: any) {
 		
 		if (! (name in this.events)) return;
 		
@@ -22,6 +24,19 @@ export default class EventEmitter{
 		
 	}
 	
+	off(name: string, callback: Callback) {
+		const arr = this.events[name];
+		
+		const index = arr.indexOf(callback);
+		
+		if (index === -1) return;
+		arr.splice(index, 1);
+
+	}
+	
+	protected cleanEvents(){
+		this.events = {};
+	}
 }
 
 type Callback = (data?: any) => any | void

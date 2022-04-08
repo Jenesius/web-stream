@@ -6,3 +6,10 @@
 .room__user-list__title{
     margin: 0;
 }
+.button_active{
+    background-color: green;
+}
+.button_inactive{
+    background-color: red;
+}
+

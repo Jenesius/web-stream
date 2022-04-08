@@ -10,8 +10,8 @@ export default class PeerConnectionService {
 	/**
 	 * Возвращает peer connection с пользователем
 	 * */
-	static async createOffer(socket: any, tracks: MediaStreamTrack[], clientId: string, handleTrack: any, stream: any): Promise<RTCConnection> {
-		const rtcConnection = PeerConnectionService.newPeerConnection(socket, tracks, clientId, handleTrack, stream);
+	static async createOffer(socket: any, tracks: MediaStreamTrack[], clientId: string): Promise<RTCConnection> {
+		const rtcConnection = PeerConnectionService.newPeerConnection(tracks, clientId);
 		
 		const pc = rtcConnection.peerConnection
 		
@@ -21,7 +21,7 @@ export default class PeerConnectionService {
 			const offer = pc.localDescription;
 			socket.emit(PeerConnectionService.EVENT_OFFER, { offer, clientId });
 		})
-		.then(() => console.log(`Offer for ${clientId} was created.`))
+		//.then(() => console.log(`Offer for ${clientId} was created.`))
 		.then(() => rtcConnection)
 	}
 	
@@ -29,8 +29,8 @@ export default class PeerConnectionService {
 	 * @description Когда нам отправили offer, мы регистрируем peerConnection по
 	 * дписываем полученный offer и отправляем answer обратно пользователю.
 	 * */
-	static async createAnswer(socket: any, tracks: MediaStreamTrack[], clientId: string, offer: RTCSessionDescription, handleTrack: any, stream) {
-		const rtcConnection = PeerConnectionService.newPeerConnection(socket, tracks, clientId, handleTrack, stream);
+	static async createAnswer(socket: any, tracks: MediaStreamTrack[], clientId: string, offer: RTCSessionDescription) {
+		const rtcConnection = PeerConnectionService.newPeerConnection(tracks, clientId);
 		
 		const pc = rtcConnection.peerConnection;
 		
@@ -41,7 +41,7 @@ export default class PeerConnectionService {
 			const answer = pc.localDescription;
 			socket.emit('peer:answer', { answer, clientId })
 		})
-		.then(() => console.log(`Answer for ${clientId} was created.`))
+		//.then(() => console.log(`Answer for ${clientId} was created.`))
 		.then(() => rtcConnection)
 		
 	}
@@ -49,35 +49,27 @@ export default class PeerConnectionService {
 	/**
 	 * @description нам пришёл ответный answer на наш offer. Устанавливаем свзязь
 	 * */
-	static async applyAnswer(peerConnection: RTCPeerConnection,clientId: string, answer: RTCSessionDescription ) {
-		return peerConnection.setRemoteDescription(answer)
-		.then(() => {
-			console.log(`Answer was applied from ${clientId}`);
-			
-			return peerConnection;
-		})
+	static async applyAnswer(rtcConnection: RTCConnection, answer: RTCSessionDescription ) {
+		return rtcConnection.peerConnection.setRemoteDescription(answer)
+
 	}
 	
 	
-	static addCandidate(peer: RTCPeerConnection, clientId: string, candidate: RTCIceCandidate) {
-		return peer.addIceCandidate(candidate)
-		.then(() => {
-			console.log(`New candidate ${clientId}`);
-			return peer;
-		})
+	static addCandidate(rtcConnection: RTCConnection,  candidate: RTCIceCandidate) {
+		return rtcConnection.peerConnection.addIceCandidate(candidate)
 	}
 	
-	static newPeerConnection(socket: any, tracks: MediaStreamTrack[], clientId: string, handleTrack: any, stream :any): RTCConnection {
+	static newPeerConnection(tracks: MediaStreamTrack[], clientId: string): RTCConnection {
 		
 		return new RTCConnection({
-			tracks, clientId, handleTrack, emit: socket.emit.bind(socket), stream
+			tracks, clientId
 		})
 
 	}
 	
-	static endConnection(peer: RTCPeerConnection, clientId: string) {
-		console.log(`Connection with ${clientId} closed`);
-		peer.close();
+	static endConnection(rtcConnection: RTCConnection) {
+		console.log(`Connection with ${rtcConnection.clientId} closed`);
+		rtcConnection.peerConnection.close();
 	}
 	
 	

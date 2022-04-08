@@ -1,4 +1,4 @@
-import Socket from "./Socket";
+import Socket from "./socket";
 
 export default class RoomSocket extends Socket{
 	
