@@ -297,8 +297,9 @@ export function WidgetRoom() {
 			{
 				users.map(user => <UserScreen user = {user} key = {user._index} />)
 			}
-			
-			<RoomActionPanel/>
+			<div className = "room__action-panel">
+				<RoomActionPanel/>
+			</div>
 			
 		</div>
 	)

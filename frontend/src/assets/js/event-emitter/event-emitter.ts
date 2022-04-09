@@ -39,4 +39,4 @@ export default class EventEmitter{
 	}
 }
 
-type Callback = (data?: any) => any | void
+export type Callback = (data?: any) => any | void

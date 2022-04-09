@@ -1,22 +1,27 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface MediaConstrains{
-	audio: boolean
+	audio?: boolean,
+	video?: boolean,
+	screen?: boolean
 }
 
 export const mediaSlice = createSlice({
 	name: 'media',
 	initialState: {
 		constrains: {
-			audio: true,
-			video: true,
-			screen: true,
+			audio: false,
+			video: false,
+			screen: false,
 		}
 	},
 	reducers: {
 		updateConstrains: (state, action: PayloadAction<MediaConstrains>) => {
 			
-			state.constrains.audio = action.payload.audio
+			Object.entries(action.payload).forEach(elem => {
+				const key = elem[0] as keyof MediaConstrains;
+				state.constrains[key] = action.payload[key]
+			})
 			
 		}
 	}

@@ -1,4 +1,6 @@
-import EventEmitter from "./event-emitter/event-emitter";
+import EventEmitter, {Callback} from "./event-emitter/event-emitter";
+
+import store from "../../store/index";
 
 type StreamTrackType = 'screen-video' | 'user-audio' | 'user-video';
 
@@ -9,29 +11,49 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	tracks: {
 		[name in StreamTrackType]?: MediaStreamTrack
 	} = {}
-	
-	isCamera: boolean
-	isMicrophone: boolean
+
 	
 	constructor() {
 		super();
+		
+		
+		
 	}
 	
-	async camera(v: boolean) {
-		this.isCamera = v;
-		
-		await this.getUserMedia();
-		
+	onupdateTrack(callback: Callback){
+		return this.on(ApplicationMediaManager.EVENT_UPDATE_TRACK, callback);
 	}
-	async microphone(v: boolean) {
-		this.isMicrophone = v;
-		await this.getUserMedia();
+	
+	
+	get isMicrophone() {
+		return store.getState().mediaConstrains.microphone;
 	}
-	async screen(v: boolean) {
+	get isCamera() {
+		return store.getState().mediaConstrains.camera;
+	}
+	get isScreen() {
+		return store.getState().mediaConstrains.screen;
+	}
+	
+	async camera(v: boolean = !this.isCamera) {
+		await this.getUserMedia({
+			audio: this.isMicrophone, // без изменений
+			video: v
+		});
+	}
+	async microphone(v: boolean = !this.isMicrophone) {
+		await this.getUserMedia({
+			audio: v, // без изменений
+			video: this.isCamera
+		});
+	}
+	async screen(v: boolean = !this.isScreen) {
+		
 		const captureStream = await navigator.mediaDevices.getDisplayMedia({
-			video: true,
+			video: v,
 			audio: false
 		});
+		
 		captureStream.getTracks().forEach(track => {
 			const kind = track.kind as 'video' | 'audio';
 			const kinds:{[name: string]: StreamTrackType} = {
@@ -41,12 +63,12 @@ export default new class ApplicationMediaManager extends EventEmitter{
 			this.addTrack(kinds[kind], track);
 		});
 	}
-	async getUserMedia() {
-		
-		const constrains = {
-			video: this.isCamera,
-			audio: this.isMicrophone
-		};
+	
+	/**
+	 * Обновляет трэки связанные с пользователем (camera или microphone)
+	 * */
+	async getUserMedia(constrains: {video: boolean, audio: boolean}) {
+
 		
 		if (!Object.values(constrains).includes(true)) {
 			this.stopTrack('user-video');
@@ -70,6 +92,7 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	}
 	
 	private addTrack(type: StreamTrackType, track: MediaStreamTrack) {
+		
 		
 		const hints = {
 			'user-video': 'motion',

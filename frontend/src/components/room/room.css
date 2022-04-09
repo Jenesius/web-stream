@@ -13,3 +13,8 @@
     background-color: red;
 }
 
+.room__action-panel{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

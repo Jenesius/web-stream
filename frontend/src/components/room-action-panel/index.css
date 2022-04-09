@@ -1,0 +1,9 @@
+.room-action-panel{
+    display: flex;
+    height: 45px;
+
+    align-items: center;
+    border: 1px solid #C2C1C1;
+    border-radius: 7px;
+    overflow: hidden;
+}

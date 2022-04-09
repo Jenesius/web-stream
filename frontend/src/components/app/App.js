@@ -3,8 +3,12 @@ import {WidgetRoom} from "../room/room";
 import Test from "../test";
 
 import { BrowserRouter, Router, Route, Routes, Link } from "react-router-dom";
+import {useDispatch, useSelector} from "react-redux";
 
 function App() {
+	
+
+	
 	return (
 		<div className="App">
 			<p>Default page</p>
