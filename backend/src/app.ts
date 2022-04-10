@@ -20,9 +20,13 @@ const config = {
     port: 3333
 }
 
-app.get('/page', (_req, res) => {
-    res.sendFile(path.join(__dirname, '../f/index.html'));
-})
+const frontDir = path.join(__dirname, '..', '..', 'frontend', 'build');
+
+app.use(express.static(frontDir));
+
+path.join(__dirname, '../../frontend/build/index.html')
+
+
 
 //app.use('/rooms', roomRouter);
 
@@ -31,7 +35,9 @@ server.listen(config.port,  () => {
 })
 
 
-
+app.get('*', function (req, res) {
+    res.sendFile(path.join(frontDir, 'index.html'));
+});
 
 app.on('error', (err) => {
     console.warn(err);
