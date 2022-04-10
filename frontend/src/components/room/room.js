@@ -54,7 +54,7 @@ export function WidgetRoom() {
 
 
 	return (
-		<div class = "room-wrap">
+		<div className = "room-wrap">
 			<p>Room with id {id}</p>
 			<button onClick={() => recall()}>re call</button>
 			<div className = "room-body room-users-cards">
