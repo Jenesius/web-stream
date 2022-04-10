@@ -4,6 +4,8 @@ import PeerConnectionService
 	from "../adapter-peer-connection/peer-connection-service";
 import RTCConnection from "../connections/rtc-connection";
 
+import AudioSystem from "./../audio-system/audio-system";
+
 export default class Room extends EventEmitter{
 	
 	socket: Socket
@@ -86,10 +88,26 @@ export default class Room extends EventEmitter{
 	
 	private initializeRtcConnection(rtcConnection: RTCConnection) {
 		const clientId = rtcConnection.clientId;
+		
 		rtcConnection.on(RTCConnection.EVENT_ON_ICE_CANDIDATE, candidate => {
 			this.socket.emit('peer:candidate', {clientId, candidate})
 		})
 
+		
+		console.log(rtcConnection.tracks);
+		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
+			let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
+			
+			a.forEach(t => AudioSystem.addTrack(t))
+		})
+		
+		
+		let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
+		
+		a.forEach(t => AudioSystem.addTrack(t))
+		
+		
+		
 		this.addUser(rtcConnection);
 	}
 	

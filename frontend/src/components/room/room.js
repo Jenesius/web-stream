@@ -7,6 +7,7 @@ import Room from "../../assets/js/room/Room";
 import UserScreen from "../user-screen/user-screen";
 import RoomActionPanel from "../room-action-panel";
 import ApplicationMediaManager from "../../assets/js/application-media-manager";
+import AudioSystem from "../../assets/js/audio-system/audio-system";
 
 export function WidgetRoom() {
 	
@@ -19,6 +20,8 @@ export function WidgetRoom() {
 
 		document.title = `Room ${id}`;
 
+		AudioSystem.init();
+		
 		room = new Room();
 		room.on('update', () => {
 			
@@ -51,13 +54,15 @@ export function WidgetRoom() {
 
 
 	return (
-		<div>
+		<div class = "room-wrap">
 			<p>Room with id {id}</p>
 			<button onClick={() => recall()}>re call</button>
+			<div className = "room-body room-users-cards">
+				{
+					users.map(user => <UserScreen user = {user} key = {user._index} />)
+				}
+			</div>
 			
-			{
-				users.map(user => <UserScreen user = {user} key = {user._index} />)
-			}
 			<div className = "room__action-panel">
 				<RoomActionPanel/>
 			</div>

@@ -56,9 +56,6 @@ export default function UserScreen({user}: UserScreenParams) {
 		 
 		 <div className= "user-screen">
 			 <p>UserId {userId}</p>
-			 <p>PeerId {user._index}</p>
-			
-			 <button onClick={init}>init</button>
 			 <video ref = {video} width="320" height="240" autoPlay muted />
 		 </div>
 		 

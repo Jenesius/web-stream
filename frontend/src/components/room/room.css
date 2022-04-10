@@ -1,3 +1,11 @@
+.room-wrap{
+    display: flex;
+    flex-direction: column;
+}
+
+.room-body{
+    flex-grow: 1;
+}
 .room__user-list{
     display: flex;
     flex-direction: column;
@@ -17,4 +25,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.room-users-cards{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
 }
