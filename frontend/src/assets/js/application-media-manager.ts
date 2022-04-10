@@ -5,34 +5,30 @@ import store from "../../store/index";
 type StreamTrackType = 'screen-video' | 'user-audio' | 'user-video';
 
 export default new class ApplicationMediaManager extends EventEmitter{
-	
 	static EVENT_UPDATE_TRACK = 'tracks:update';
 	
 	tracks: {
 		[name in StreamTrackType]?: MediaStreamTrack
 	} = {}
 
-	
 	constructor() {
 		super();
-		
-		
-		
+		/* @ts-ignore */
+		window.mediaManager = this;
 	}
 	
 	onupdateTrack(callback: Callback){
 		return this.on(ApplicationMediaManager.EVENT_UPDATE_TRACK, callback);
 	}
 	
-	
 	get isMicrophone() {
-		return store.getState().mediaConstrains.microphone;
+		return store.getState().mediaConstrains['user-audio'];
 	}
 	get isCamera() {
-		return store.getState().mediaConstrains.camera;
+		return store.getState().mediaConstrains['user-video'];
 	}
 	get isScreen() {
-		return store.getState().mediaConstrains.screen;
+		return store.getState().mediaConstrains['screen-video'];
 	}
 	
 	async camera(v: boolean = !this.isCamera) {
@@ -48,6 +44,11 @@ export default new class ApplicationMediaManager extends EventEmitter{
 		});
 	}
 	async screen(v: boolean = !this.isScreen) {
+		
+		if (!v) {
+			this.stopTrack('screen-video');
+			return;
+		}
 		
 		const captureStream = await navigator.mediaDevices.getDisplayMedia({
 			video: v,
@@ -69,16 +70,12 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	 * */
 	async getUserMedia(constrains: {video: boolean, audio: boolean}) {
 
+		if (!constrains.video) this.stopTrack('user-video');
+		if (!constrains.audio) this.stopTrack('user-audio');
 		
-		if (!Object.values(constrains).includes(true)) {
-			this.stopTrack('user-video');
-			this.stopTrack('user-audio');
-			return;
-		}
+		if (!Object.values(constrains).includes(true)) return;
 		
 		const stream = await navigator.mediaDevices.getUserMedia(constrains)
-		
-		
 		
 		stream.getTracks().forEach(track => {
 			const kind = track.kind as 'video';

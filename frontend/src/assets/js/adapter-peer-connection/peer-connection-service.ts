@@ -15,7 +15,14 @@ export default class PeerConnectionService {
 		
 		const pc = rtcConnection.peerConnection
 		
-		return pc.createOffer()
+		return pc.createOffer({
+			offerToReceiveAudio: true,
+			offerToReceiveVideo: true
+		})
+		.then(offer => {
+			console.log(`[peer-service] create offer`, offer);
+			return offer;
+		})
 		.then(offer => pc.setLocalDescription(offer))
 		.then(() => {
 			const offer = pc.localDescription;
@@ -36,6 +43,10 @@ export default class PeerConnectionService {
 		
 		return pc.setRemoteDescription(offer)
 		.then(() => pc.createAnswer())
+		.then(answer => {
+			console.log(`[peer-service] create answer`, answer);
+			return answer;
+		})
 		.then(answer => pc.setLocalDescription(answer))
 		.then(() => {
 			const answer = pc.localDescription;

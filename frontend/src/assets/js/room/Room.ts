@@ -106,29 +106,17 @@ export default class Room extends EventEmitter{
 	 * TEST methods
 	 * */
 	
-	stream: MediaStream
+	tracks: MediaStreamTrack[] = []
 	
 	getTracks(){
-		return this.stream?.getTracks() || []
+		console.log('[room] provided tracks', this.tracks);
+		return this.tracks;
 	}
 	
-	async recall(constrains: any){
-		try {
-			this.stream.getTracks().forEach(function(track) {
-				track.stop();
-			});
-		} catch (e) {}
-		
-		
-		if (Object.values(constrains).includes(true)) {
+	async recall(tracks:MediaStreamTrack[]){
 
-			
-			this.stream = await navigator.mediaDevices.getUserMedia(constrains);
-		} else {
-			this.stream = new MediaStream();
-		}
-		// @ts-ignore
-		document.getElementById('test').srcObject = this.stream;
+		this.tracks = tracks;
+		//document.getElementById('test').srcObject = this.stream;
 
 		Object.values(this.users).forEach(elem => this.createNewOffer(elem));
 		

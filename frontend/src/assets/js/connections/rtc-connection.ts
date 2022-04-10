@@ -14,13 +14,19 @@ export default class RTCConnection extends EventEmitter{
 	
 	constructor({tracks, clientId}: RTCConnectionParams) {
 		super();
+		console.log(`[rtc-connection] [%cpeer:${this._index}%c]`, 'color: green', 'color: black');
 		
 		this.clientId = clientId;
 		
 		this.peerConnection = new RTCPeerConnection({});
 		
+		tracks.forEach(track => {
+			console.log(`[rtc-connection] [%cpeer:${this._index}%c] add track.`, 'color: green', 'color: black', track.id);
+			this.peerConnection.addTrack(track)
+		});
+		
 		this.peerConnection.ontrack = (e: RTCTrackEvent) => {
-			//console.log(`[rtc-connection] new track ${this._index}`);
+			console.log(`[rtc-connection] [%cpeer:${this._index}%c] new track ${e.track.id}`, 'color: green', 'color: black');
 			const newTrack = e.track;
 			
 			this.tracks.push(newTrack);
@@ -36,6 +42,13 @@ export default class RTCConnection extends EventEmitter{
 			this.emit(RTCConnection.EVENT_TRACKS_UPDATE);
 		}
 		
+		this.peerConnection.oniceconnectionstatechange = (e:Event) => {
+			console.log(`[rtc-connection] [peer:${this._index}] state is ${this.peerConnection.iceConnectionState}`)
+		}
+		this.peerConnection.onconnectionstatechange = (e: Event) => {
+			console.log(this.peerConnection.connectionState);
+		}
+		
 		
 		this.peerConnection.onicecandidate = e => {
 			//console.log(`[rtc-connection] add icecandidate ${this._index}`);
@@ -45,8 +58,13 @@ export default class RTCConnection extends EventEmitter{
 		this.peerConnection.onicecandidateerror = e => {
 			console.warn(`Handle error PeerConnection with client ${clientId}`, e);
 		}
-		
-		tracks.forEach(track => this.peerConnection.addTrack(track));
+		/*
+		// Когда добавляется новый трек
+		this.peerConnection.onnegotiationneeded = (e: Event) => {
+			console.log(e)
+		}
+		*/
+
 		
 		// @ts-ignore
 		if (!window.globalPeers) window.globalPeers = []; window.globalPeers.push(this);

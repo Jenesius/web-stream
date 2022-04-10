@@ -11,23 +11,23 @@ export default function RoomActionPanel() {
 	//const dispatch = useAppDispatch();
 	//const mediaConstrains = useAppSelector(state => state.media.constrains);
 	
-	const {microphone, camera, screen} = useSelector((state:any) => state.mediaConstrains)
+	const mediaConstrains = useSelector((state:any) => state.mediaConstrains)
 	
 	const array:any = [
 		{
 			icon: 'microphone',
 			callback: () => ApplicationMediaManager.microphone(),
-			active: microphone
+			active: mediaConstrains['user-audio']
 		},
 		{
 			icon: 'video-camera',
 			callback: () => ApplicationMediaManager.camera(),
-			active: camera
+			active: mediaConstrains['user-video']
 		},
 		{
 			icon: 'screen',
 			callback: () => ApplicationMediaManager.screen(),
-			active: screen
+			active: mediaConstrains['screen-video']
 		}
 	]
 	

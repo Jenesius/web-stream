@@ -1,14 +1,44 @@
-import { configureStore } from '@reduxjs/toolkit'
-import {mediaSlice} from "./modules/media-store";
-
-
-const store = configureStore({
-	reducer: {
-		media: mediaSlice.reducer
+import {createStore} from "redux";
+const defaultState = {
+	mediaConstrains: {
+		'user-audio': false,
+		'user-video': false,
+		'screen-video': false
 	}
+}
+
+function playlist( state: any = defaultState, action: any ){
+	
+	if (action.type === 'media:update-constrains') {
+	
+		const newConstrains = {
+			...state.mediaConstrains,
+			...action.payload
+		}
+		
+		return {
+			...state,
+			mediaConstrains: newConstrains
+		}
+	
+	}
+	
+	return state;
+}
+
+const store = createStore(playlist);
+
+store.subscribe(() => {
+	//console.log('+',store.getState());
 })
+
+
+
+/*
+
+*/
+
+// @ts-ignore
+window.store = store;
+
 export default store;
-// Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
-// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch

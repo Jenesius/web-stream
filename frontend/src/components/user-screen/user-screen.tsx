@@ -10,7 +10,6 @@ interface UserScreenParams {
 
 
 export default function UserScreen({user}: UserScreenParams) {
-	console.log(`Mount for ${user._index}`);
 	const video = useRef(null);
 	
 	//const [isVideo, setIsVideo] = useState(false);
@@ -18,7 +17,6 @@ export default function UserScreen({user}: UserScreenParams) {
 	
 
 	function test(user: RTCConnection) {
-		console.log('run test');
 		let m = new MediaStream();
 		
 		const videoTrack = user.tracks.find(track => track.kind === 'video');
@@ -57,8 +55,8 @@ export default function UserScreen({user}: UserScreenParams) {
 	 return (
 		 
 		 <div className= "user-screen">
-			 <p>{userId}</p>
-			 <p>{user._index}</p>
+			 <p>UserId {userId}</p>
+			 <p>PeerId {user._index}</p>
 			
 			 <button onClick={init}>init</button>
 			 <video ref = {video} width="320" height="240" autoPlay muted />
