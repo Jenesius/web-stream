@@ -23,6 +23,8 @@ export default class Socket{
 		if (process.env.NODE_ENV)
 		url = process.env["REACT_APP_BACKEND_SOCKET_URL"] +'/' + namespace;
 		
+		console.log(url);
+		
 		let socket = this._socket = io( url, {
 			transports: ['websocket']
 		})
