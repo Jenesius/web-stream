@@ -18,7 +18,7 @@ export default class Socket{
 	
 	constructor(namespace = '') {
 		
-		let url = `ws://${document.location.host}` + '/' + namespace;
+		let url = `wss://${document.location.host}` + '/' + namespace;
 		
 		if (process.env.NODE_ENV !== 'production')
 		url = process.env["REACT_APP_BACKEND_SOCKET_URL"] +'/' + namespace;
