@@ -20,10 +20,10 @@ export default class Socket{
 		
 		let url = `ws://${document.location.host}` + '/' + namespace;
 		
-		if (process.env.NODE_ENV)
+		if (process.env.NODE_ENV !== 'production')
 		url = process.env["REACT_APP_BACKEND_SOCKET_URL"] +'/' + namespace;
 		
-		console.log(url);
+		console.log(url, process.env.NODE_ENV);
 		
 		let socket = this._socket = io( url, {
 			transports: ['websocket']
