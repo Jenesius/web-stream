@@ -23,15 +23,13 @@ export default class Socket{
 		if (process.env.NODE_ENV !== 'production')
 		url = process.env["REACT_APP_BACKEND_SOCKET_URL"] +'/' + namespace;
 		
-		console.log(url, process.env.NODE_ENV);
-		
 		let socket = this._socket = io( url, {
 			transports: ['websocket']
 		})
 		
 		// client-side
 		socket.on("connect", () => {
-			console.log(`Connect. User id: %c${this.socket.id}`, 'color: blue' );
+			//console.log(`Connect. User id: %c${this.socket.id}`, 'color: blue' );
 		});
 		
 		socket.on('connect_error', err => {

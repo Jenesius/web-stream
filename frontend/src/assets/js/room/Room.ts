@@ -20,15 +20,25 @@ export default class Room extends EventEmitter{
 		this.socket = new Socket('peers');
 		this.socket.emit('peer:join');
 		
-		this.socket.on('peer:new-offer', this.createNewOffer.bind(this));
+		this.socket.on('peer:new-offer', this.connect.bind(this)); // create offer
 		
 		this.socket.on('peer:candidate', this.onCandidate.bind(this));
 		
-		this.socket.on('peer:offer', this.createAnswer.bind(this));
+		this.socket.on('peer:offer', this.join.bind(this)); //Create answer
 		
 		this.socket.on('peer:answer', this.acceptCall.bind(this));
 		
 		this.socket.on('peer:user-leave', this.removeConnect.bind(this));
+		
+		this.socket.on('peer:remove-track', ({clientId, trackId}: any) => {
+			
+			const connection = this.getConnection(clientId);
+			
+			if (!connection || connection.closed) return;
+			
+			connection.removeRemoteTrack(trackId);
+			
+		})
 		
 		this.users = new Proxy({}, {
 			set: (target: Room["users"], p: string, value) => {
@@ -94,13 +104,23 @@ export default class Room extends EventEmitter{
 		})
 
 		
-		console.log(rtcConnection.tracks);
 		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
 			let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
 			
 			a.forEach(t => AudioSystem.addTrack(t))
 		})
 		
+		
+		rtcConnection.on(RTCConnection.EVENT_NEGOTIATION_CONNECTION, async () => {
+			const offer = await rtcConnection.createOffer();
+			const clientId = rtcConnection.clientId;
+			
+			this.socket.emit(PeerConnectionService.EVENT_OFFER, { offer, clientId });
+		})
+		
+		rtcConnection.on(RTCConnection.EVENT_REMOVE_TRACK, trackId => {
+			PeerConnectionService.removeTrack(this.socket, trackId);
+		})
 		
 		let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
 		
@@ -136,10 +156,37 @@ export default class Room extends EventEmitter{
 		this.tracks = tracks;
 		//document.getElementById('test').srcObject = this.stream;
 
-		Object.values(this.users).forEach(elem => this.createNewOffer(elem));
+		Object.values(this.users).forEach(elem => this.connect(elem));
 		
 		return;
 		
+	}
+	/**
+	 * CONNECT TO
+	 * Мы являемся инициаторами
+	 * */
+	connect({clientId}: {clientId: string}) {
+		const connection = this.getConnection(clientId);
+		
+		if (!connection || connection.closed) return this.createNewOffer({clientId});
+		
+		connection.updateTracks(this.tracks);
+	}
+	async join(data: {clientId: string, offer: any}) {
+		
+		const clientId = data.clientId;
+		
+		const connection = this.getConnection(clientId);
+		if (!connection || connection.closed) return this.createAnswer(data);
+		
+		const answer = await connection.createAnswer(data.offer);
+		this.socket.emit('peer:answer', { answer, clientId })
+	}
+	
+
+	
+	private getConnection(clientId: string) {
+		return this.users[clientId];
 	}
 	
 }

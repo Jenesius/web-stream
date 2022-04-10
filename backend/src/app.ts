@@ -4,6 +4,9 @@ import path from "path";
 //import roomRouter from './routes/room-route';
 import connectSocket from "./socket";
 import detenv from "dotenv";
+import log4js from "log4js";
+
+
 detenv.config({
     path: path.join(__dirname, '..', '.env')
 });
@@ -42,3 +45,10 @@ app.get('*', function (req, res) {
 app.on('error', (err) => {
     console.warn(err);
 })
+
+const logDir = path.join(__dirname, '..', 'Logs');
+
+log4js.configure({
+    appenders: { main: { type: "file", filename: path.join(logDir, "default.log") } },
+    categories: { default: { appenders: ['main'], level: "error" } }
+});

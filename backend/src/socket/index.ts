@@ -2,6 +2,7 @@ import http from "http";
 import {Server, Socket} from "socket.io";
 import Room from "../classes/room";
 import RoomNamespace from "./namespaces/room-namespace";
+import JournalNamespace from "./namespaces/journal-namespace";
 
 // @ts-ignore
 function handleRouteSocket (socket: Socket, event: string, callback) {
@@ -38,7 +39,8 @@ export default function connectSocket(server: http.Server) {
     const io = new Server(server);
 
     RoomNamespace(io);
-
+    JournalNamespace(io);
+    
     /*io.on('connection', (socket) => {
         console.log('a user connected');
 

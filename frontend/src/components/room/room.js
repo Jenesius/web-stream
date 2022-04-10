@@ -19,8 +19,6 @@ export function WidgetRoom() {
 	useEffect(() => {
 
 		document.title = `Room ${id}`;
-
-		AudioSystem.init();
 		
 		room = new Room();
 		room.on('update', () => {

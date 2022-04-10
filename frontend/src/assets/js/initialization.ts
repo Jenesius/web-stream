@@ -1,5 +1,6 @@
 import ApplicationMediaManager from "./application-media-manager"
 import store from "../../store";
+import Socket from "./sockets/socket";
 export default function initialization() {
 	ApplicationMediaManager.onupdateTrack( () => {
 		
@@ -15,9 +16,13 @@ export default function initialization() {
 			return acc;
 		}, {})
 		
+		//console.log(`[store] constrains ${JSON.stringify(payload)}`);
+		
 		store.dispatch({type: 'media:update-constrains', payload})
 		
 	})
+
+	
 }
 
 

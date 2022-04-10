@@ -15,6 +15,8 @@ export default new class ApplicationMediaManager extends EventEmitter{
 		super();
 		/* @ts-ignore */
 		window.mediaManager = this;
+		/* @ts-ignore */
+		window.globalTracks = [];
 	}
 	
 	onupdateTrack(callback: Callback){
@@ -70,8 +72,12 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	 * */
 	async getUserMedia(constrains: {video: boolean, audio: boolean}) {
 
+		// При отсутствии элементов - чистим их
 		if (!constrains.video) this.stopTrack('user-video');
 		if (!constrains.audio) this.stopTrack('user-audio');
+		
+		if (constrains.video && this.tracks["user-video"] && this.tracks["user-video"].readyState === "live") delete constrains.video;
+		if (constrains.audio && this.tracks["user-audio"] && this.tracks["user-audio"].readyState === "live") delete constrains.audio;
 		
 		if (!Object.values(constrains).includes(true)) return;
 		
@@ -90,7 +96,8 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	
 	private addTrack(type: StreamTrackType, track: MediaStreamTrack) {
 		
-		
+		// @ts-ignore
+		window.globalTracks.push(track);
 		const hints = {
 			'user-video': 'motion',
 			'user-audio': 'speech',
@@ -110,6 +117,11 @@ export default new class ApplicationMediaManager extends EventEmitter{
 		this.emit(ApplicationMediaManager.EVENT_UPDATE_TRACK);
 	}
 	
+	
+	/**
+	 * Т.к. track.stop не вызывает событие ended, был реазован допольнительный
+	 * метод для остановки трека, который по завершнию диспатчит эвент ended.
+	 * */
 	private stopTrack(type: StreamTrackType) {
 		
 		if (!this.tracks[type]) return;

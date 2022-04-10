@@ -103,6 +103,15 @@ export default (io: Server) => {
 
 		})
 
+		socket.on('peer:remove-track', trackId => {
+			
+			socket.broadcast.to(ROOM_NAME).emit('peer:remove-track', {
+				clientId: socket.id,
+				trackId
+			})
+			
+		})
+		
 		socket.on('disconnect', () => {
 
 			delete peers[socket.id];

@@ -6,6 +6,7 @@ export default class PeerConnectionService {
 	
 	static EVENT_CANDIDATE = 'peer:candidate';
 	static EVENT_OFFER = 'peer:offer';
+	static EVENT_REMOVE_TRACK = 'peer:remove-track';
 	
 	/**
 	 * Возвращает peer connection с пользователем
@@ -20,7 +21,7 @@ export default class PeerConnectionService {
 			offerToReceiveVideo: true
 		})
 		.then(offer => {
-			console.log(`[peer-service] create offer`, offer);
+			//console.log(`[peer-service] create offer`, offer);
 			return offer;
 		})
 		.then(offer => pc.setLocalDescription(offer))
@@ -44,7 +45,7 @@ export default class PeerConnectionService {
 		return pc.setRemoteDescription(offer)
 		.then(() => pc.createAnswer())
 		.then(answer => {
-			console.log(`[peer-service] create answer`, answer);
+			//console.log(`[peer-service] create answer`, answer);
 			return answer;
 		})
 		.then(answer => pc.setLocalDescription(answer))
@@ -83,5 +84,8 @@ export default class PeerConnectionService {
 		rtcConnection.peerConnection.close();
 	}
 	
+	static removeTrack(socket: any, trackId: string) {
+		socket.emit(PeerConnectionService.EVENT_REMOVE_TRACK, trackId);
+	}
 	
 }

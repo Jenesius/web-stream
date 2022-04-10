@@ -14,3 +14,5 @@
 ## Figma
 [link](https://www.figma.com/file/YxyBJvSDVYXlBUZMr0EGhi/web-stream?node-id=0%3A1)
 
+[То, как можно создать](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#handling_the_removal_of_tracks)
+
