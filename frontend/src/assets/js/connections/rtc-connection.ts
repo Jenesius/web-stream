@@ -1,44 +1,80 @@
 import EventEmitter from "../event-emitter/event-emitter";
+import makeId from "../make-id";
+import PeerError from "../peer-error";
 
 export default class RTCConnection extends EventEmitter{
 	
-	//static EVENT_NEW_TRACK = 'new-track';
-	static EVENT_TRACKS_UPDATE = 'tracks:update';
-	static EVENT_ON_ICE_CANDIDATE = 'peer:candidate';
+	static EVENT_TRACKS_UPDATE 			= 'tracks:update';
+	static EVENT_ON_ICE_CANDIDATE 		= 'peer:candidate';
 	static EVENT_NEGOTIATION_CONNECTION = 'peer:create-offer';
-	static EVENT_REMOVE_TRACK = 'peer:remove-track'
+	static EVENT_REMOVE_TRACK 			= 'peer:remove-track'
 	
-	peerConnection: RTCPeerConnection
+	peerConnection: RTCPeerConnection;
+	
+	/**
+	 * Идентификатор клиента с которым устанавливает соединение
+	 * На работу RTC-Connection не влияет, используется только для идентификации
+	 * соединения.
+	 * */
 	clientId: string;
+	
+	/**
+	 * Объект сопоставления. На данный момент не используется
+	 * */
+	credentials: RTCConnectionParams["credentials"]
+	
+	/**
+	 * Массив трэков, которые предоставляет удалённый пользователь.
+	 * Почему используется именно массив, а не объект: Т.к. нельзя точно сказать
+	 * какие именно tracks будут хранится у нас. Задача RTCConnection дать удобн
+	 * ый способ взаимодействия с подключением.
+	 * */
 	tracks: MediaStreamTrack[] = []
 	
+	/**
+	 * Локальные отправители. Хранятся для удаления трека из подключения.
+	 * */
 	localRtpSenders: {
 		[name: string]: RTCRtpSender
 	} = {};
 	
-	readonly _index = Math.floor(Math.random() * 10000);
+	readonly _index = makeId(6);
 	
-	constructor({tracks, clientId}: RTCConnectionParams) {
+	constructor({tracks, clientId, credentials = {}}: RTCConnectionParams) {
 		super();
-		console.log(`[rtc-connection] [%cpeer:${this._index}%c] new`, 'color: green', 'color: black');
+		this.msg(`new connect to %c${clientId}`, 'color: blue');
 		
 		this.clientId = clientId;
+		this.credentials = credentials;
 		
-		this.peerConnection = new RTCPeerConnection({iceServers: [     // Information about ICE servers - Use your own!
-				{
-					urls: "stun:stun.l.google.com:19302"
+		const iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
+		
+		this.peerConnection = new RTCPeerConnection({iceServers});
+		
+		this.updateTracks(tracks); // Устанавливаем новый дорожки
+		
+		this.peerConnection.ontrack = (e: RTCTrackEvent) => {
+			
+			try {
+				if (!e.streams.length) throw PeerError.OnTrackStreamsIsEmpty(this, e);
+				
+				// Подписываемся на удаление дорожки
+				// ВОзможно нудно подписываться на все стримы, которые есть
+				e.streams[0].onremovetrack = (ev) => {
+					this.removeRemoteTrack(ev.track.id);
 				}
-			]});
-		
-		tracks.forEach(track => this.addTrack(track));
-		
-		this.peerConnection.ontrack = (e: RTCTrackEvent) => this.addRemoteTrack(e.track);
-		
-		
-		this.peerConnection.oniceconnectionstatechange = (e:Event) => {
-			console.log(`[rtc-connection] [%cpeer:${this._index}%c] state is ${this.peerConnection.iceConnectionState}`, 'color: green', 'color: black')
+				const streamId = e.streams[0].id;
+				this.setMediaStreamCredentials(streamId, {trackId: e.track.id})
+				
+				this.addRemoteTrack(e.track);
+			} catch (e) {
+				this.msg(`error set mediaCredentials ${JSON.stringify(e)}`, e)
+			}
+			
 		}
 		
+		this.peerConnection.oniceconnectionstatechange = () =>
+			this.msg(`state is ${this.peerConnection.iceConnectionState}`)
 		
 		this.peerConnection.onicecandidate = e => {
 			this.emit(RTCConnection.EVENT_ON_ICE_CANDIDATE, e.candidate)
@@ -47,8 +83,8 @@ export default class RTCConnection extends EventEmitter{
 			console.warn(`Handle error PeerConnection with client ${clientId}`, e);
 		}
 		
-		this.peerConnection.onnegotiationneeded = (e: Event) => {
-			console.log(`[rtc-connection] [peer:${this._index}] negotiation`)
+		this.peerConnection.onnegotiationneeded = () => {
+			this.msg(`negotiation`)
 			this.emit(RTCConnection.EVENT_NEGOTIATION_CONNECTION);
 		}
 		
@@ -57,11 +93,20 @@ export default class RTCConnection extends EventEmitter{
 		
 	}
 	
+	/**
+	 * Закрывает соединение и чистит за нас всё.
+	 * */
 	close() {
-		this.peerConnection.close();
-		super.cleanEvents();
+		this.peerConnection.close(); // Закрываем соединение
+		super.cleanEvents();		 // Удаляем все эвенты
+		
+		// Удаляем всех сендеров
+		Object.values(this.localRtpSenders).forEach(this.removeSender.bind(this));
 	}
 	
+	/**
+	 * Удобные состояние подключения
+	 * */
 	get state() {
 		return this.peerConnection.connectionState;
 	}
@@ -74,44 +119,70 @@ export default class RTCConnection extends EventEmitter{
 	
 	/**
 	 * Метод для обновления треков между подключением
-	 * @description Метод проверяет все треки, отменяет существующие и добавляет новые
-	 * @param {MediaStreamTrack[]} newTracks - все новые трэки
+	 * @description Метод устанавливает используемые треки, и отменяет те, котор
+	 * ые уже не используются. Если дорожка не указана в передаваемых значениях,
+	 * но она активна - произайдёт удаление sender. Оставшиеся дорожки будут доб
+	 * авлены
+	 * @param {RTCTrack[]} newTracks - все новые трэки
 	 * */
 	updateTracks(newTracks: MediaStreamTrack[]) {
-		
-		// Удаляем локальные sender, которые не нужно использовать
+		/**
+		 * Удаление локальный RTCRtpSender, который не были указаны в переданных
+		 * дорожках
+		 * */
 		Object.values(this.localRtpSenders).forEach(sender => {
-			if (newTracks.includes(sender.track)) return;
+			if (newTracks.find(track => track.id === sender.track.id)) return;
 			
 			this.removeSender(sender);
 		})
 		
 		newTracks.forEach(track => {
+			// Sender уже есть
 			if (this.localRtpSenders[track.id]) return;
 			
-			this.addTrack(track);
+			this.addLocalTrack(track);
 		})
-		
 	}
 	
+	/**
+	 * @description Начисто удаляет sender.
+	 * */
 	private removeSender(sender: RTCRtpSender) {
+		this.msg(`remove sender`);
 		const trackId = sender.track.id;
 		
-		this.emit(RTCConnection.EVENT_REMOVE_TRACK, trackId);
-		
-		console.log(`[rtc-connection] [%cpeer:${this._index}%c] remove track.`, 'color: green', 'color: black', trackId);
+		/**
+		 * Отправка credentials. Нужна была для удаления дорожки их потока.
+			const cr =
+				Object.entries(this.getMediaStreamCredentials())
+				.find(data => data[1].trackId === trackId)
+		 
+			this.emit(RTCConnection.EVENT_REMOVE_TRACK, cr[0]);
+		*/
 		delete this.localRtpSenders[trackId];
 		sender.track.stop();
 		this.peerConnection.removeTrack(sender);
 	}
 	
-	private addTrack(track: MediaStreamTrack) {
-		console.log(`[rtc-connection] [%cpeer:${this._index}%c] setting track.`, 'color: green', 'color: black', track.id);
-		const sender = this.peerConnection.addTrack(track);
+	private addLocalTrack(track: MediaStreamTrack) {
+		this.msg(`add local track`);
+		const sender = this.peerConnection.addTrack(track, new MediaStream([track]));
+
+		// Сохранили связь
+		//this.setMediaStreamCredentials(m.id, {trackId: track.id});
+		
+		/**
+		 * Сохранение RTCRtpSender для дальнейшего использование(Удаление трэка)
+		 * */
 		this.localRtpSenders[track.id] = sender;
 	}
 	
-	
+	/**
+	 * @description Асинронное создание offer. В пресетах используется условие,
+	 * что ожидается, как аудио, так и видео.
+	 * Для оптимизации, можно сперва получить для чего нам нужен оффер. и далее
+	 * уже устанавливать credentials.
+	 * */
 	async createOffer() {
 		const offer = await this.peerConnection.createOffer({
 			offerToReceiveAudio: true,
@@ -119,9 +190,11 @@ export default class RTCConnection extends EventEmitter{
 		})
 		await this.peerConnection.setLocalDescription(offer)
 		return offer;
-
 	}
 	
+	/**
+	 * @description Создание answer на основе полученного offer
+	 * */
 	async createAnswer(offer: RTCSessionDescription) {
 		await this.peerConnection.setRemoteDescription(offer);
 		const answer = await this.peerConnection.createAnswer();
@@ -131,38 +204,80 @@ export default class RTCConnection extends EventEmitter{
 	}
 	
 	private addRemoteTrack(newTrack: MediaStreamTrack) {
-		console.log(`[rtc-connection] [%cpeer:${this._index}%c] getting track ${newTrack.id}`, 'color: green', 'color: black');
-
+		this.msg('get remote track');
+		
 		this.tracks.push(newTrack);
 		
 		newTrack.onended = () => {
-			console.log(`[rtc-connection] remove track ${this._index}`);
+			this.msg(`remote track ended.`);
+			
 			const index = this.tracks.findIndex(track => track.id === newTrack.id);
 			if (index !== -1) this.tracks.splice(index, 1);
 			
 			this.emit(RTCConnection.EVENT_TRACKS_UPDATE);
 		}
-		
 		this.emit(RTCConnection.EVENT_TRACKS_UPDATE);
 	}
+	
 	removeRemoteTrack(trackId: string) {
-		console.log(`[rtc-connection] [%cpeer:${this._index}%c] remove remote track ${trackId}`, 'color: green', 'color: black');
-		const trackIndex = this.tracks.findIndex(track => track.id === trackId)
+		this.msg(`remove remote track `)
 		
+		/*
+		try {
+			const streamId = trackId;
+			trackId = this.getMediaStreamCredentials()[streamId].trackId
+		} catch (e ){
+			this.msg(`error remove remote track ${JSON.stringify(e)}`)
+		}
+		*/
+		const trackIndex = this.tracks.findIndex(track => track.id === trackId)
 		if (trackIndex === -1) return;
 		
-		const _track = this.tracks[trackIndex];
+		const track = this.tracks[trackIndex];
 		
-		_track.stop();
-		_track.dispatchEvent(new Event('ended'));
-		this.tracks.splice(trackIndex, 1);
+		// Метод по очистке не нужно вызывать, т.к. он автоматическо добавлен в
+		// addRemoteTrack
+		track.stop();
+		track.dispatchEvent(new Event('ended'));
 	}
 	
+
+	private msg(text: string, ...any: any) {
+		console.log(`[%cpeer:${this._index}%c] ${text}`, 'color: green', 'color: black', ...any);
+	}
+	
+	/**
+	 *
+	 * !!! НА ДАННЫЙ МОМЕНТ РАБОТА С CREDENTIALS НЕ ОСУЩЕСТВЛЯЕТСЯ. !!!
+	 *
+	 * Используется для того, чтобы сохранить связь между удалённым пользоватьск
+	 * им трэком.
+	 * */
+	streamMediaCredentials: {
+		[streamId: string]: {
+			trackId: string,
+		}
+	} = {}
+	/**
+	 * @description Установки связи между трэком и его назначением.
+	 * */
+	public setMediaStreamCredentials(streamId: string, data: {trackId: string}) {
+		this.streamMediaCredentials[streamId] = {
+			trackId: data.trackId
+		}
+	}
+	
+	public getMediaStreamCredentials() {
+		return this.streamMediaCredentials;
+	}
 	
 }
 
 interface RTCConnectionParams {
 	tracks: MediaStreamTrack[],
 	clientId: string,
+	credentials?: {
+		[type: string]: string
+	}
 }
 

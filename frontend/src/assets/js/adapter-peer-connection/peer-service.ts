@@ -1,6 +1,7 @@
 import RTCConnection from "../connections/rtc-connection";
+import RTCTrack from "../rtc-track";
 
-export default class PeerConnectionService {
+export default class PeerService {
 	
 	static CONFIGURATION = {}
 	
@@ -11,26 +12,16 @@ export default class PeerConnectionService {
 	/**
 	 * Возвращает peer connection с пользователем
 	 * */
-	static async createOffer(socket: any, tracks: MediaStreamTrack[], clientId: string): Promise<RTCConnection> {
-		const rtcConnection = PeerConnectionService.newPeerConnection(tracks, clientId);
+	static async createOffer(socket: any, rtcConnection: RTCConnection) {
+
+		const offer = await rtcConnection.createOffer();
+		const clientId = rtcConnection.clientId;
+
+		//const mediaBinding = rtcConnection.getMediaBinding();
 		
-		const pc = rtcConnection.peerConnection
+		socket.emit(PeerService.EVENT_OFFER, { offer, clientId});
 		
-		return pc.createOffer({
-			offerToReceiveAudio: true,
-			offerToReceiveVideo: true
-		})
-		.then(offer => {
-			//console.log(`[peer-service] create offer`, offer);
-			return offer;
-		})
-		.then(offer => pc.setLocalDescription(offer))
-		.then(() => {
-			const offer = pc.localDescription;
-			socket.emit(PeerConnectionService.EVENT_OFFER, { offer, clientId });
-		})
-		//.then(() => console.log(`Offer for ${clientId} was created.`))
-		.then(() => rtcConnection)
+		return rtcConnection;
 	}
 	
 	/**
@@ -38,7 +29,7 @@ export default class PeerConnectionService {
 	 * дписываем полученный offer и отправляем answer обратно пользователю.
 	 * */
 	static async createAnswer(socket: any, tracks: MediaStreamTrack[], clientId: string, offer: RTCSessionDescription) {
-		const rtcConnection = PeerConnectionService.newPeerConnection(tracks, clientId);
+		const rtcConnection = PeerService.newPeerConnection(tracks, clientId);
 		
 		const pc = rtcConnection.peerConnection;
 		
@@ -85,7 +76,7 @@ export default class PeerConnectionService {
 	}
 	
 	static removeTrack(socket: any, trackId: string) {
-		socket.emit(PeerConnectionService.EVENT_REMOVE_TRACK, trackId);
+		socket.emit(PeerService.EVENT_REMOVE_TRACK, trackId);
 	}
 	
 }

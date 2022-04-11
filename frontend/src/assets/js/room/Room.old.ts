@@ -1,18 +1,39 @@
 import Socket from "../sockets/socket";
 import EventEmitter from "../event-emitter/event-emitter";
-import PeerConnectionService
-	from "../adapter-peer-connection/peer-connection-service";
+import PeerService
+	from "../adapter-peer-connection/peer-service";
 import RTCConnection from "../connections/rtc-connection";
 
 import AudioSystem from "./../audio-system/audio-system";
+import RTCTrack from "../rtc-track";
+import ApplicationMediaManager, {StreamTrackType} from "../application-media-manager";
 
-export default class Room extends EventEmitter{
+export default class RoomOld extends EventEmitter{
 	
 	socket: Socket
-	users: {
+	connections: {
 		[name: string]: RTCConnection
+	} = new Proxy({}, {
+			set: (target: RoomOld["connections"], p: string, value) => {
+		
+		// Закрываем соединение с предыдущим peer
+		if (p in target) target[p].close();
+		target[p] = value;
+		
+		
+		return true;
+	},
+	deleteProperty: (target, p: string) => {
+		
+		if (p in target) target[p].close();
+		
+		delete target[p];
+		this.emit('update');
+		
+		return true;
 	}
-	
+	});
+
 	
 	
 	constructor() {
@@ -20,13 +41,19 @@ export default class Room extends EventEmitter{
 		this.socket = new Socket('peers');
 		this.socket.emit('peer:join');
 		
-		this.socket.on('peer:new-offer', this.connect.bind(this)); // create offer
+		this.join();
+
+	}
+	
+	// Подключение к комнате
+	private join() {
+		this.socket.on('peer:new-offer', this.connectTo.bind(this)); // create offer
 		
 		this.socket.on('peer:candidate', this.onCandidate.bind(this));
 		
-		this.socket.on('peer:offer', this.join.bind(this)); //Create answer
+		this.socket.on('peer:offer', this.onConnect.bind(this)); //Create answer
 		
-		this.socket.on('peer:answer', this.acceptCall.bind(this));
+		this.socket.on('peer:answer', this.onAnswer.bind(this));
 		
 		this.socket.on('peer:user-leave', this.removeConnect.bind(this));
 		
@@ -39,58 +66,49 @@ export default class Room extends EventEmitter{
 			connection.removeRemoteTrack(trackId);
 			
 		})
-		
-		this.users = new Proxy({}, {
-			set: (target: Room["users"], p: string, value) => {
-				
-				// Закрываем соединение с предыдущим peer
-				if (p in target) target[p].close();
-				target[p] = value;
-				
-				
-				return true;
-			},
-			deleteProperty: (target, p: string) => {
-				
-				if (p in target) target[p].close();
-				
-				delete target[p];
-				this.emit('update');
-				
-				return true;
-			}
-		});
 	}
-	
 	
 	addUser(rtcConnection: RTCConnection){
 		const clientId:string = rtcConnection.clientId;
-		this.users[clientId] = rtcConnection;
+		this.connections[clientId] = rtcConnection;
 		this.emit('update');
 	}
 	removeUser(clientId: string) {
-		delete this.users[clientId];
+		delete this.connections[clientId];
 		this.emit('update');
 	}
 	
-	async createNewOffer({clientId}: {clientId: string}){
+	/**
+	 * @description Создание нового P2P соединиения с пользователем clientId
+	 * */
+	private async addConnection(clientId: string) {
+		const rc = await this.createNewConnection(clientId);
 		
-		const rtcConnection = await
-			PeerConnectionService.createOffer(this.socket, this.getTracks(), clientId);
+		await PeerService.createOffer(this.socket, rc);
+	}
+	
+	private async createNewConnection(clientId: string){
+		
+		const rtcConnection = new RTCConnection({
+			clientId, tracks: this.getTracks()
+		})
 		
 		this.initializeRtcConnection(rtcConnection);
+		
+		return rtcConnection;
 	}
+	
 	
 	async onCandidate({candidate, clientId}: {candidate: any, clientId: string}){
 		
-		if (this.users[clientId])
-			await PeerConnectionService.addCandidate(this.users[clientId], candidate);
+		if (this.connections[clientId])
+			await PeerService.addCandidate(this.connections[clientId], candidate);
 	}
 	
 	async createAnswer({offer, clientId}: {offer: any, clientId: any}) {
 
 		const rtcConnection = await
-			PeerConnectionService.createAnswer(this.socket, this.getTracks(), clientId, offer);
+			PeerService.createAnswer(this.socket, this.getTracks(), clientId, offer);
 		
 		this.initializeRtcConnection(rtcConnection);
 		
@@ -115,11 +133,11 @@ export default class Room extends EventEmitter{
 			const offer = await rtcConnection.createOffer();
 			const clientId = rtcConnection.clientId;
 			
-			this.socket.emit(PeerConnectionService.EVENT_OFFER, { offer, clientId });
+			this.socket.emit(PeerService.EVENT_OFFER, { offer, clientId });
 		})
 		
 		rtcConnection.on(RTCConnection.EVENT_REMOVE_TRACK, trackId => {
-			PeerConnectionService.removeTrack(this.socket, trackId);
+			PeerService.removeTrack(this.socket, trackId);
 		})
 		
 		let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
@@ -131,32 +149,22 @@ export default class Room extends EventEmitter{
 		this.addUser(rtcConnection);
 	}
 	
-	async acceptCall({answer, clientId}: {answer: any, clientId: string}){
-		await PeerConnectionService.applyAnswer(this.users[clientId], answer);
-	}
 	
 	removeConnect({clientId}: {clientId: string}) {
-		PeerConnectionService.endConnection(this.users[clientId]);
+		PeerService.endConnection(this.connections[clientId]);
 		this.removeUser(clientId);
 	}
 	
 	/**
 	 * TEST methods
 	 * */
-	
-	tracks: MediaStreamTrack[] = []
-	
-	getTracks(){
-		console.log('[room] provided tracks', this.tracks);
-		return this.tracks;
+	private getTracks(): RTCTrack[] {
+		return ApplicationMediaManager.getTracks();
 	}
 	
-	async recall(tracks:MediaStreamTrack[]){
+	async recall(){
 
-		this.tracks = tracks;
-		//document.getElementById('test').srcObject = this.stream;
-
-		Object.values(this.users).forEach(elem => this.connect(elem));
+		Object.values(this.connections).forEach(elem => this.connectTo(elem));
 		
 		return;
 		
@@ -165,28 +173,38 @@ export default class Room extends EventEmitter{
 	 * CONNECT TO
 	 * Мы являемся инициаторами
 	 * */
-	connect({clientId}: {clientId: string}) {
+	connectTo({clientId}: {clientId: string}) {
 		const connection = this.getConnection(clientId);
 		
-		if (!connection || connection.closed) return this.createNewOffer({clientId});
+		if (!connection || connection.closed) return this.addConnection(clientId);
 		
-		connection.updateTracks(this.tracks);
+		connection.updateTracks(this.getTracks());
 	}
-	async join(data: {clientId: string, offer: any}) {
-		
+
+	
+	private async onConnect(data: {offer: RTCSessionDescription, clientId: string}) {
 		const clientId = data.clientId;
-		
 		const connection = this.getConnection(clientId);
+		
 		if (!connection || connection.closed) return this.createAnswer(data);
 		
 		const answer = await connection.createAnswer(data.offer);
 		this.socket.emit('peer:answer', { answer, clientId })
 	}
 	
-
-	
-	private getConnection(clientId: string) {
-		return this.users[clientId];
+	private async onAnswer(data: {answer: RTCSessionDescription, clientId: string, constrains: MediaConstrains}) {
+		
+		const clientId = data.clientId;
+		const answer   = data.answer;
+		
+		await PeerService.applyAnswer(this.connections[clientId], answer);
 	}
 	
+	private getConnection(clientId: string) {
+		return this.connections[clientId];
+	}
+	
+}
+type MediaConstrains = {
+	[name in StreamTrackType]: string
 }

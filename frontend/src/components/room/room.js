@@ -3,7 +3,7 @@ import "./room.css";
 
 import Socket from "../../assets/js/sockets/socket";
 import {useParams} from "react-router-dom";
-import Room from "../../assets/js/room/Room";
+import RoomOld from "../../assets/js/room/Room.old";
 import UserScreen from "../user-screen/user-screen";
 import RoomActionPanel from "../room-action-panel";
 import ApplicationMediaManager from "../../assets/js/application-media-manager";
@@ -20,10 +20,10 @@ export function WidgetRoom() {
 
 		document.title = `Room ${id}`;
 		
-		room = new Room();
+		room = new RoomOld();
 		room.on('update', () => {
 			
-			let v = Object.values(room.users).map(elem => {
+			let v = Object.values(room.connections).map(elem => {
 				
 				elem.hash = Math.floor(Math.random() % 1000);
 				return elem;
@@ -34,7 +34,7 @@ export function WidgetRoom() {
 
 		
 		ApplicationMediaManager.onupdateTrack(() => {
-			window.room.recall(ApplicationMediaManager.getTracks());
+			window.room.recall();
 		})
 		
 		
