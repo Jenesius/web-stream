@@ -8,13 +8,13 @@ import AudioSystem from "./../audio-system/audio-system";
 import RTCTrack from "../rtc-track";
 import ApplicationMediaManager, {StreamTrackType} from "../application-media-manager";
 
-export default class RoomOld extends EventEmitter{
+export default class Room extends EventEmitter{
 	
 	socket: Socket
 	connections: {
 		[name: string]: RTCConnection
 	} = new Proxy({}, {
-			set: (target: RoomOld["connections"], p: string, value) => {
+			set: (target: Room["connections"], p: string, value) => {
 		
 		// Закрываем соединение с предыдущим peer
 		if (p in target) target[p].close();
@@ -202,6 +202,15 @@ export default class RoomOld extends EventEmitter{
 	
 	private getConnection(clientId: string) {
 		return this.connections[clientId];
+	}
+	
+	/**
+	 * @description Покинуть комнату.
+	 * Должно удалить все подключения
+	 * */
+	leave() {
+		this.socket.emit('room:leave');
+		Object.values(this.connections).forEach(connection => connection.close())
 	}
 	
 }

@@ -145,7 +145,7 @@ export default class RTCConnection extends EventEmitter{
 	}
 	
 	/**
-	 * @description Начисто удаляет sender.
+	 * @description Начисто удаляет sender. Удаление локальной дорожки
 	 * */
 	private removeSender(sender: RTCRtpSender) {
 		this.msg(`remove sender`);
@@ -160,8 +160,13 @@ export default class RTCConnection extends EventEmitter{
 			this.emit(RTCConnection.EVENT_REMOVE_TRACK, cr[0]);
 		*/
 		delete this.localRtpSenders[trackId];
-		sender.track.stop();
-		this.peerConnection.removeTrack(sender);
+		//sender.track.stop();
+		try {
+		
+		} catch (e) {
+			this.peerConnection.removeTrack(sender);
+			
+		}
 	}
 	
 	private addLocalTrack(track: MediaStreamTrack) {

@@ -15,20 +15,16 @@ export default new class AudioSystem extends EventEmitter{
 		// @ts-ignore
 		window.audioSystem = this;
 		
-		/*
-		navigator.mediaDevices.getUserMedia({video: false, audio: true})
-		.then(stream => {
-			this.addTrack(stream.getAudioTracks()[0])
-		})
-		*/
-		
-		window.onload = () => {
-			this.context = new AudioContext();
-		}
 	}
 	
-	init() {
-
+	async init() {
+		try {
+			if (this.context)
+				await this.context.close();
+		} catch (e) {
+			console.warn(e);
+		}
+		this.context = new AudioContext();
 	}
 	
 	async addTrack(track: MediaStreamTrack) {
