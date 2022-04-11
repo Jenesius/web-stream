@@ -49,7 +49,10 @@ export default class RTCConnection extends EventEmitter{
 		
 		const iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
 		
-		this.peerConnection = new RTCPeerConnection({iceServers});
+		this.peerConnection = new RTCPeerConnection({
+			iceServers,
+			
+		});
 		
 		this.updateTracks(tracks); // Устанавливаем новый дорожки
 		
@@ -97,6 +100,9 @@ export default class RTCConnection extends EventEmitter{
 	 * Закрывает соединение и чистит за нас всё.
 	 * */
 	close() {
+		
+		this.msg('closed');
+		
 		this.peerConnection.close(); // Закрываем соединение
 		super.cleanEvents();		 // Удаляем все эвенты
 		
@@ -145,7 +151,7 @@ export default class RTCConnection extends EventEmitter{
 	}
 	
 	/**
-	 * @description Начисто удаляет sender. Удаление локальной дорожки
+	 * @description Начисто удаляет sender.
 	 * */
 	private removeSender(sender: RTCRtpSender) {
 		this.msg(`remove sender`);
@@ -160,13 +166,14 @@ export default class RTCConnection extends EventEmitter{
 			this.emit(RTCConnection.EVENT_REMOVE_TRACK, cr[0]);
 		*/
 		delete this.localRtpSenders[trackId];
-		//sender.track.stop();
-		try {
 		
-		} catch (e) {
+		// Мы останавливаем саму дорожку - это ошибка. В RTCConnection дорожки
+		// нельзя останавливать. Нельзя на них влиять.
+		// sender.track.stop();
+		try {
 			this.peerConnection.removeTrack(sender);
-			
-		}
+		} catch (e) {}
+		
 	}
 	
 	private addLocalTrack(track: MediaStreamTrack) {
@@ -189,12 +196,32 @@ export default class RTCConnection extends EventEmitter{
 	 * уже устанавливать credentials.
 	 * */
 	async createOffer() {
-		const offer = await this.peerConnection.createOffer({
-			offerToReceiveAudio: true,
-			offerToReceiveVideo: true
-		})
-		await this.peerConnection.setLocalDescription(offer)
-		return offer;
+		
+		let offer;
+		
+		try {
+			offer = await this.peerConnection.createOffer({
+				/*
+				offerToReceiveAudio: true,
+				offerToReceiveVideo: true
+				
+				
+				 */
+			})
+			await this.peerConnection.setLocalDescription(offer)
+			return offer;
+		} catch (e) {
+			
+			
+			this.msg(e);
+			this.msg('', e.tracks);
+			this.msg('', this);
+			
+			this.msg(offer?.type);
+			this.msg(offer?.sdp);
+			
+		}
+
 	}
 	
 	/**
