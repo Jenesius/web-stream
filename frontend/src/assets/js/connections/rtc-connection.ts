@@ -25,9 +25,9 @@ export default class RTCConnection extends EventEmitter{
 		this.clientId = clientId;
 		
 		this.peerConnection = new RTCPeerConnection({iceServers: [     // Information about ICE servers - Use your own!
-				/*{
-					urls: "stun:stun.stunprotocol.org"
-				}*/
+				{
+					urls: "stun:stun.l.google.com:19302"
+				}
 			]});
 		
 		tracks.forEach(track => this.addTrack(track));
