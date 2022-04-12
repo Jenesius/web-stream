@@ -1,4 +1,4 @@
-import RTCConnection from "./rtc-connection";
+import RTCConnection from "./connections/rtc-connection";
 
 export default class PeerError extends Error{
 	
