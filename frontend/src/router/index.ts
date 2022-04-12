@@ -5,7 +5,7 @@ import {
 	RouterView
 } from 'vue-router'
 import App from "@/App.vue";
-import WidgetRoom from "@/components/room/widget-room.vue";
+import WidgetRoomPreset from "@/components/room/widget-room-preset.vue";
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -20,7 +20,8 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: ':id',
-				component: WidgetRoom
+				component: WidgetRoomPreset,
+				name: 'room'
 			}
 		]
 	}

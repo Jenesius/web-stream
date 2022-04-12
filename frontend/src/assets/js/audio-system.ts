@@ -29,10 +29,15 @@ export default new class AudioSystem extends EventEmitter{
 	
 	async addTrack(track: MediaStreamTrack) {
 		
+		console.log(this.context);
+		
 		if (!this.context) return;
 		
+		console.log('+')
 		await this.context.resume();
+		console.log('++')
 		this.tracks.push(track);
+		console.log('+++')
 		
 		const mediaStreamWrap = new MediaStream([track]);
 		const mediaSource = this.context.createMediaStreamSource(mediaStreamWrap);

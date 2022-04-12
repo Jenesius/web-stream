@@ -1,6 +1,15 @@
 <template>
     <div>
         <p>Room {{id}}</p>
+
+
+        <widget-room-user-screen
+            v-for = "connection in users"
+            :key = "connection._index"
+
+            :connection = "connection"
+        />
+
         <widget-room-panel />
     </div>
 </template>
@@ -11,15 +20,25 @@
     import WidgetRoomPanel from "@/components/room/widget-room-panel.vue";
     import Room from "@/assets/js/room";
     import {MediaManager} from "@/assets/js/media-manager";
+    import WidgetRoomUserScreen
+        from "@/components/room/widget-room-user-screen.vue";
+    import RTCConnection from "@/assets/js/rtc-connection";
+
 
     const route = useRoute();
     const id = computed(() => route.params.id);
 
+
     let room;
 
-    const users = ref([]);
+    const users = ref<RTCConnection[]>([]);
 
-    watch(() => id.value, () => {
+    watch(() => id.value, async () => {
+
+        if (!id.value) return;
+
+
+
 
         document.title = `Room ${id.value}`
 
@@ -36,6 +55,7 @@
         return () => {
             offRoomUpdate();
             offUpdateTrack();
+            room.leave();
         }
 
 

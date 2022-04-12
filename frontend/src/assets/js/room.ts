@@ -209,6 +209,7 @@ export default class Room extends EventEmitter{
 	 * */
 	leave() {
 		this.socket.emit('room:leave');
+		this.socket._socket.close();
 		Object.values(this.connections).forEach(connection => connection.close())
 	}
 	

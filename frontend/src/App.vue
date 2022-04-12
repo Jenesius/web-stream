@@ -1,13 +1,13 @@
 <template>
-    <widget-room/>
+    <router-view/>
+
+    <modal-container/>
 </template>
 
 <script setup lang = "ts">
-    import WidgetRoom from "@/components/room/widget-room";
     import {MediaManager} from "@/assets/js/media-manager";
     import {useStore} from "vuex";
-
-
+    import {container as ModalContainer} from "jenesius-vue-modal"
 
 
     const store = useStore()

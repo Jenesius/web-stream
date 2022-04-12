@@ -23,7 +23,7 @@ export default class Socket{
 		
 
 		if (process.env.NODE_ENV !== 'production')
-		url = process.env["REACT_APP_BACKEND_SOCKET_URL"] +'/' + namespace;
+		url = 'ws://localhost:3333' +'/' + namespace;
 		
 		const socket = this._socket = io( url, {
 			transports: ['websocket']
