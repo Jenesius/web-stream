@@ -28,7 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "builder": "webpack --mode=production"
   },
   "eslintConfig": {
     "extends": [
@@ -49,6 +50,7 @@
     ]
   },
   "devDependencies": {
-    "socket.io-client": "^4.4.1"
+    "socket.io-client": "^4.4.1",
+    "webpack-cli": "^4.9.2"
   }
 }

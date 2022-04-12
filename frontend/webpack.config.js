@@ -3,7 +3,8 @@ const path = require('path');
 module.exports = {
 	mode: 'none',
 	entry: {
-		app: path.join(__dirname, 'src', 'index.tsx')
+		app: path.join(__dirname, 'src', 'index.js'),
+		auth: path.join(__dirname, 'scr', 'pages', 'auth', 'index.tsx')
 	},
 	target: 'web',
 	resolve: {
