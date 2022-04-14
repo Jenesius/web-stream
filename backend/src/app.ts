@@ -39,7 +39,7 @@ server.listen(config.port,  () => {
 
 
 app.get('*', function (req, res) {
-    res.sendFile(path.join(frontDir, 'index.html'));
+    res.sendFile(path.join(frontDir, 'main.html'));
 });
 
 app.on('error', (err) => {
