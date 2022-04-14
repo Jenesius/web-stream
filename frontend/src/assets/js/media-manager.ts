@@ -150,6 +150,31 @@ class SingletonMediaManager extends EventEmitter{
 			return acc;
 		}, {})
 	}
+	async getDevices() {
+		const array = await navigator.mediaDevices.enumerateDevices();
+		
+		const store: {
+			videoinput: MediaDeviceInfo[],
+			audioinput: MediaDeviceInfo[],
+			audiooutput: MediaDeviceInfo[],
+		} = {
+			videoinput: [],
+			audioinput: [],
+			audiooutput: []
+		}
+		
+		
+		array.forEach(device => {
+			const groupId = device.groupId;
+			const kind = device.kind
+			
+			if (store[kind].find(d => d.groupId === groupId)) return;
+			store[kind].push(device);
+		})
+		
+		return store;
+		
+	}
 }
 
 export const MediaManager = new SingletonMediaManager()

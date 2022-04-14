@@ -4,7 +4,7 @@
         <div class = "room-cards__fullscreen" v-if = "fullscreenConnectionId">
             <widget-room-user-screen
                 class = "room-cards__fullscreen-item"
-                :connection="activeConnection"
+                :user="activeConnection"
                 :active = "true"
                 @fullscreen = "onFullScreen(null)"
             />
@@ -15,11 +15,11 @@
             :class = "{'room-card__list_short': fullscreenConnectionId}"
         >
             <widget-room-user-screen
-                v-for="connection in filteredConnections"
-                :key = "connection.id"
-                :connection = "connection"
+                v-for="user in filterArray"
+                :key = "user.connection.id"
+                :user = "user"
 
-                @fullscreen = "onFullScreen(connection.id)"
+                @fullscreen = "onFullScreen(user.connection.id)"
             />
         </div>
 
@@ -34,14 +34,19 @@
     import {computed, ref} from "vue";
 
     import useRoomCards from "./../../assets/js/hooks/use-room-cards";
+    import {UserConnectionInfo} from "@/assets/js/types/user-types";
     const props = defineProps<{
-        connections: RTCConnection[],
+        users: {connection: RTCConnection, userInfo: UserConnectionInfo}[],
     }>()
 
-    const [filteredConnections, fullscreenConnectionId, onFullScreen] = useRoomCards(computed(() => props.connections))
+    const [fullscreenConnectionId, onFullScreen] = useRoomCards(computed(() => props.users))
+
+    const filterArray = computed(() => {
+        return props.users.filter(c => c.connection.id !== fullscreenConnectionId.value)
+    })
 
     const activeConnection = computed(
-        () => props.connections.find(c => c.id === fullscreenConnectionId.value)
+        () => props.users.find(c => c.connection.id === fullscreenConnectionId.value)
     );
 
     const refContainer = ref<HTMLElement>();
@@ -58,7 +63,10 @@
 <style scoped>
 
     .room-cards{
+        /*
         width: 100%;
+
+         */
         gap: 10px;
 
     }
@@ -70,13 +78,21 @@
         gap: 10px;
     }
 
+    .room-cards__list{
+        grid-template-columns: repeat(auto-fit, 500px);
+    }
     .room-card__list_short{
         grid-template-columns: 1fr;
         grid-auto-rows: max-content;
     }
     .room-cards__fullscreen{
+        display: grid;
+        align-content: baseline;
+        /*
         grid-template-rows: 1fr;
         grid-template-columns: 1fr;
+
+         */
     }
 
     .room-card_fullscreen-item{
@@ -87,8 +103,5 @@
         width: 100%;
         height: 100%;
     }
-    .room-cards__fullscreen{
-        display: grid;
-        place-content: center;
-    }
+
 </style>

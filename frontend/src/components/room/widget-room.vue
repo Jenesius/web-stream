@@ -4,9 +4,9 @@
         <widget-room-header :title = "`Room ${id}`" :duration = "duration"/>
 
 
-        <div class = "widget-room-user-screen">
+        <div class = "widget-room__body">
 
-            <widget-room-cards :connections = "users" />
+            <widget-room-cards :users = "users" />
 
         </div>
 
@@ -30,11 +30,31 @@
     import WidgetRoomCards from "@/components/room/widget-room-cards.vue";
 
 
+    const props = defineProps<{
+        nickname: string
+    }>()
     const route = useRoute();
     const id = computed(() => route.params.id);
 
 
-    const users = ref<RTCConnection[]>([]);
+    const connections = ref<RTCConnection[]>([]);
+
+    let room: Room;
+
+    const users = computed(() => {
+
+
+
+        return connections.value.map(c => {
+
+            return {
+                connection: c,
+                userInfo: room.getUserInfo(c.clientId)
+            }
+
+        })
+
+    })
     const duration = ref(0);
     const startDuration = new Date();
 
@@ -50,10 +70,13 @@
 
         document.title = `Room ${id.value}`
 
-        const room = new Room();
+        room = new Room({userInfo: {nickname: props.nickname}});
+
+        // @ts-ignore
+        window.room = room;
 
         const offRoomUpdate = room.on('update', () => {
-            users.value = Object.values(room.connections)
+            connections.value = Object.values(room.connections)
         })
 
         const offUpdateTrack = MediaManager.onupdateTrack(() => {
@@ -79,25 +102,25 @@
 
 <style scoped>
     .widget-room{
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: 10px;
+        margin: auto;
+        max-width: 1400px;
         width: 100%;
+        max-height: 100vh;
+        height: 100vh;
+
+        --room-size-bottom: 85px;
     }
-    .widget-room-user-screen{
-        display: flex;
-        flex-wrap: wrap;
-        width: 100%;
-        flex-grow: 1;
-        gap: 10px;
-        justify-content: center;
+    .widget-room__body{
+
+        height: calc(100% - 55px - var(--room-size-bottom));
+        overflow: auto;
         padding: 10px 0;
     }
     .widget-room__container-panel{
-        padding: 100px 0;
+        height: var(--room-size-bottom);
         display: grid;
         justify-content: center;
+
     }
 
 </style>

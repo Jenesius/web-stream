@@ -1,4 +1,7 @@
 import RTCConnection from "./rtc-connection";
+import Room from "@/assets/js/room";
+import Socket from "@/assets/js/socket";
+import {UserConnectionInfo} from "@/assets/js/types/user-types";
 
 export default class PeerService {
 	
@@ -11,14 +14,14 @@ export default class PeerService {
 	/**
 	 * Возвращает peer connection с пользователем
 	 * */
-	static async createOffer(socket: any, rtcConnection: RTCConnection) {
+	static async createOffer(room: Room, rtcConnection: RTCConnection) {
 
 		const offer = await rtcConnection.createOffer();
 		const clientId = rtcConnection.clientId;
 
 		//const mediaBinding = rtcConnection.getMediaBinding();
 		
-		socket.emit(PeerService.EVENT_OFFER, { offer, clientId});
+		room.socket.emit(PeerService.EVENT_OFFER, { offer, clientId, userInfo: room.userInfo});
 		
 		return rtcConnection;
 	}
@@ -27,12 +30,12 @@ export default class PeerService {
 	 * @description Когда нам отправили offer, мы регистрируем peerConnection по
 	 * дписываем полученный offer и отправляем answer обратно пользователю.
 	 * */
-	static async createAnswer(socket: any, tracks: MediaStreamTrack[], clientId: string, offer: RTCSessionDescription) {
+	static async createAnswer({socket, tracks, clientId, offer, userInfo}: CreateAnswerParams) {
 		const rtcConnection = PeerService.newPeerConnection(tracks, clientId);
 		
 		await rtcConnection.createAnswer(offer)
 		.then(answer => {
-			socket.emit('peer:answer', { answer, clientId })
+			socket.emit('peer:answer', { answer, clientId, userInfo })
 		})
 		
 		return  rtcConnection;
@@ -69,4 +72,12 @@ export default class PeerService {
 		socket.emit(PeerService.EVENT_REMOVE_TRACK, trackId);
 	}
 	
+}
+
+interface CreateAnswerParams {
+	socket: Socket,
+	tracks: MediaStreamTrack[],
+	clientId: string,
+	offer: RTCSessionDescription,
+	userInfo: UserConnectionInfo
 }

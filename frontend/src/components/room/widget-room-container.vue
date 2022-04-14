@@ -1,5 +1,5 @@
 <template>
-    <widget-room v-if = "isReady" />
+    <widget-room v-if = "isReady" :nickname = "nickname" />
     <widget-room-preset v-else @ready = "onReady"/>
 </template>
 
@@ -11,7 +11,11 @@
 
     const isReady = ref(false);
 
-    function onReady() {
+    const nickname = ref('');
+
+    function onReady(data: {nickname?: string, audioinput?: string, audiooutput?: string}) {
+        console.log(data)
+        nickname.value = data.nickname;
         isReady.value = true;
     }
 

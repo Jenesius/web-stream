@@ -6,6 +6,7 @@ import RTCConnection from "./rtc-connection";
 
 import AudioSystem from "./audio-system";
 import {MediaManager} from "./media-manager";
+import {UserConnectionInfo} from "@/assets/js/types/user-types";
 
 export default class Room extends EventEmitter{
 	
@@ -34,15 +35,23 @@ export default class Room extends EventEmitter{
 	}
 	});
 
+	/**
+	 * Хранит информацию пользователей в комнате.
+	 * */
+	users: {
+		[name: string]: UserConnectionInfo
+	} = {}
+	userInfo: UserConnectionInfo
 	
 	
-	constructor() {
+	constructor({userInfo}: {userInfo: UserConnectionInfo}) {
 		super();
 		this.socket = new Socket('peers');
 		this.socket.emit('peer:join');
 		
 		this.join();
 
+		this.userInfo = userInfo;
 	}
 	
 	// Подключение к комнате
@@ -84,7 +93,7 @@ export default class Room extends EventEmitter{
 	private async addConnection(clientId: string) {
 		const rc = await this.createNewConnection(clientId);
 		
-		await PeerService.createOffer(this.socket, rc);
+		await PeerService.createOffer(this, rc);
 	}
 	
 	private async createNewConnection(clientId: string){
@@ -108,7 +117,12 @@ export default class Room extends EventEmitter{
 	async createAnswer({offer, clientId}: {offer: any, clientId: any}) {
 
 		const rtcConnection = await
-			PeerService.createAnswer(this.socket, this.getTracks(), clientId, offer);
+			PeerService.createAnswer({
+				socket: this.socket,
+				tracks: this.getTracks(),
+				userInfo: this.userInfo,
+				clientId, offer,
+			});
 		
 		this.initializeRtcConnection(rtcConnection);
 		
@@ -192,10 +206,19 @@ export default class Room extends EventEmitter{
 		connection.updateTracks(this.getTracks());
 	}
 
+	setUserInfo(clientId: string, info: UserConnectionInfo) {
+		this.users[clientId] = info;
+		this.emit('update');
+	}
+	getUserInfo(clientId: string) {
+		return this.users[clientId];
+	}
 	
-	private async onConnect(data: {offer: RTCSessionDescription, clientId: string}) {
+	private async onConnect(data: {offer: RTCSessionDescription, clientId: string, userInfo: UserConnectionInfo}) {
 		const clientId = data.clientId;
 		const connection = this.getConnection(clientId);
+		
+		this.setUserInfo(clientId, data.userInfo);
 		
 		if (!connection || connection.closed) return this.createAnswer(data);
 		
@@ -203,10 +226,12 @@ export default class Room extends EventEmitter{
 		this.socket.emit('peer:answer', { answer, clientId })
 	}
 	
-	private async onAnswer(data: {answer: RTCSessionDescription, clientId: string}) {
+	private async onAnswer(data: {answer: RTCSessionDescription, clientId: string, userInfo: UserConnectionInfo}) {
 		
 		const clientId = data.clientId;
 		const answer   = data.answer;
+		
+		this.setUserInfo(clientId, data.userInfo);
 		
 		await PeerService.applyAnswer(this.connections[clientId], answer);
 	}

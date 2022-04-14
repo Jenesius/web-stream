@@ -1,6 +1,6 @@
 <template>
     <div class= "user-screen">
-        <p class = "user-screen__full-name">UserId {{connection.clientId}}}</p>
+        <p class = "user-screen__full-name">{{user.userInfo?.nickname}}</p>
         <video class = "user-screen__video" ref = "refVideo"  autoPlay muted />
 
         <div class = "user-screen__bottom">
@@ -25,8 +25,12 @@
     import RTCConnection from "@/assets/js/rtc-connection";
     import {onMounted, onUnmounted, ref, inject} from "vue";
     import Icon from "@/components/icon/icon.vue";
+    import {UserConnectionInfo} from "@/assets/js/types/user-types";
     const props = defineProps<{
-        connection: RTCConnection,
+        user: {
+            connection: RTCConnection,
+            userInfo: UserConnectionInfo
+        },
         active?: boolean
     }>()
     const emit = defineEmits<{
@@ -75,14 +79,14 @@
 
 
 
-    const offUpdate = props.connection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
+    const offUpdate = props.user.connection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
         setTimeout(() => {
-            test(props.connection);
+            test(props.user.connection);
         }, 0)
     })
 
     onMounted(() => {
-        test(props.connection);
+        test(props.user.connection);
     })
     onUnmounted(() => {
         offUpdate()
@@ -109,7 +113,7 @@
         border-radius: 3px;
     }
     .user-screen__video{
-        border-radius: 3px;
+        border-radius: 8px;
         width: 100%;
         height: 100%;
     }

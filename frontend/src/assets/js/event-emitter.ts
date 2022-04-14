@@ -26,6 +26,7 @@ export default class EventEmitter{
 	
 	off(name: string, callback: Callback) {
 		const arr = this.events[name];
+		if (!arr) return;
 		
 		const index = arr.indexOf(callback);
 		

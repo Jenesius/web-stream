@@ -83,9 +83,9 @@ export default (io: Server) => {
 		 * Клиент должен его установить в setRemoteDescription
 		 * */
 		socket.on('peer:offer', data => {
-			const {offer, clientId, credentials} = data;
+			const {offer, clientId, credentials, userInfo} = data;
 
-			peers[clientId]?.emit('peer:offer', {offer, clientId: socket.id, credentials});
+			peers[clientId]?.emit('peer:offer', {offer, clientId: socket.id, credentials, userInfo});
 		})
 
 		socket.on('peer:candidate', data => {
@@ -97,9 +97,9 @@ export default (io: Server) => {
 
 		socket.on('peer:answer', data => {
 
-			const {answer, clientId} = data;
+			const {answer, clientId, userInfo} = data;
 
-			peers[clientId]?.emit('peer:answer', {answer, clientId: socket.id})
+			peers[clientId]?.emit('peer:answer', {answer, clientId: socket.id, userInfo})
 
 		})
 
