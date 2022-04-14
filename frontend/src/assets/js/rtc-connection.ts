@@ -39,6 +39,7 @@ export default class RTCConnection extends EventEmitter{
 	} = {};
 	
 	readonly _index = makeId(6);
+	readonly id = makeId(16);
 	
 	constructor({tracks, clientId, credentials = {}}: RTCConnectionParams) {
 		super();

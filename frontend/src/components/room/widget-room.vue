@@ -5,12 +5,9 @@
 
 
         <div class = "widget-room-user-screen">
-            <widget-room-user-screen
-                v-for = "connection in users"
-                :key = "connection._index"
 
-                :connection = "connection"
-            />
+            <widget-room-cards :connections = "users" />
+
         </div>
 
 
@@ -30,6 +27,7 @@
         from "@/components/room/widget-room-user-screen.vue";
     import RTCConnection from "@/assets/js/rtc-connection";
     import WidgetRoomHeader from "@/components/room/widget-room-header.vue";
+    import WidgetRoomCards from "@/components/room/widget-room-cards.vue";
 
 
     const route = useRoute();
@@ -85,13 +83,16 @@
         flex-direction: column;
         flex-grow: 1;
         padding: 10px;
+        width: 100%;
     }
     .widget-room-user-screen{
         display: flex;
         flex-wrap: wrap;
+        width: 100%;
         flex-grow: 1;
         gap: 10px;
         justify-content: center;
+        padding: 10px 0;
     }
     .widget-room__container-panel{
         padding: 100px 0;
