@@ -8,5 +8,6 @@ module.exports = defineConfig({
 		main: {
 			entry: './src/pages/main/main.ts'
 		}
-	}
+	},
+	outputDir: 'build'
 })
