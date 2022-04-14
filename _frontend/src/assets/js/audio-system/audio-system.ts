@@ -4,62 +4,78 @@
  * */
 import EventEmitter from "../event-emitter/event-emitter";
 
-export default new class AudioSystem extends EventEmitter{
-
+class SingletonAudioSystem extends EventEmitter{
+	
 	tracks: MediaStreamTrack[] = [];
 	
-	context: AudioContext
+	context?: AudioContext
 	constructor() {
 		super();
-		
 		// @ts-ignore
 		window.audioSystem = this;
 		
+		this.msg('singleton created.')
 	}
 	
 	async init() {
 		try {
-			if (this.context)
+			if (this.context) {
+				this.msg("closing audio-context")
 				await this.context.close();
+			}
 		} catch (e) {
 			console.warn(e);
 		}
+		this.msg("initialize audio-context")
 		this.context = new AudioContext();
 	}
 	
 	async addTrack(track: MediaStreamTrack) {
-		await this.context.resume();
-		this.tracks.push(track);
 		
-		const mediaStreamWrap = new MediaStream([track]);
-		const mediaSource = this.context.createMediaStreamSource(mediaStreamWrap);
-		const gainNode = this.context.createGain();
+		this.msg(`adding track ${track.id}`)
 		
-		gainNode.gain.value = 2;
-		mediaSource.connect(gainNode);
-		gainNode.connect(this.context.destination);
+		if (!this.context) throw new Error('test');
 		
-
+		try {
+			await this.context.resume();
+			
+			console.log(track);
+			this.tracks.push(track);
+			
+			track.contentHint = "speech"
+			
+			const mediaSource = this.context.createMediaStreamSource(new MediaStream([track]));
+			
+			mediaSource.connect(this.context.destination);
+			
+			
+			
+			// connect the AudioBufferSourceNode to the gainNode
+			// and the gainNode to the destination, so we can play the
+			// music and adjust the volume using the mouse cursor
+			
+			track.addEventListener('ended', () => {
+				this.removeTrack(track.id);
+			})
+		} catch (e) {
+			this.msg(JSON.stringify(e));
+		}
 		
-		
-		// connect the AudioBufferSourceNode to the gainNode
-		// and the gainNode to the destination, so we can play the
-		// music and adjust the volume using the mouse cursor
-		
-		track.addEventListener('ended', () => {
-			this.removeTrack(track.id);
-		})
 		
 	}
-	playSound(buffer: any) {
-
-	}
+	
 	removeTrack(id: string) {
-		
+		this.msg(`remove track ${id}`)
 		const index = this.tracks.findIndex(track => track.id === id)
 		if (index === -1) return;
 		
 		this.tracks.splice(index, 1);
 	}
-
+	
+	msg(msg: string) {
+		console.log(`[%caudio-system%c] ${msg}`, 'color: green', 'color: black')
+	}
+	
 }
+const AudioSystem = new SingletonAudioSystem();
+export default AudioSystem;

@@ -1,6 +1,6 @@
 import EventEmitter, {Callback} from "./event-emitter";
 
-import store from "../../store/index";
+import store from "../../pages/main/store/index";
 import {MediaCredentials} from "@/types/media";
 
 

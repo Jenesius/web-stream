@@ -56,7 +56,11 @@ export default class RTCConnection extends EventEmitter{
 		
 		this.updateTracks(tracks); // Устанавливаем новый дорожки
 		
+		
+		
 		this.peerConnection.ontrack = (e: RTCTrackEvent) => {
+			
+			this.emit('test-audio',e.streams[0])
 			
 			try {
 				if (!e.streams.length) throw PeerError.OnTrackStreamsIsEmpty(this, e);
@@ -129,7 +133,7 @@ export default class RTCConnection extends EventEmitter{
 	 * ые уже не используются. Если дорожка не указана в передаваемых значениях,
 	 * но она активна - произайдёт удаление sender. Оставшиеся дорожки будут доб
 	 * авлены
-	 * @param {RTCTrack[]} newTracks - все новые трэки
+	 * @param {MediaStreamTrack[]} newTracks - все новые трэки
 	 * */
 	updateTracks(newTracks: MediaStreamTrack[]) {
 		/**
@@ -137,7 +141,8 @@ export default class RTCConnection extends EventEmitter{
 		 * дорожках
 		 * */
 		Object.values(this.localRtpSenders).forEach(sender => {
-			if (newTracks.find(track => track.id === sender.track?.id)) return;
+			// @ts-ignore
+			if (newTracks.find(track => track.id === sender.track.id)) return;
 			
 			this.removeSender(sender);
 		})
@@ -155,7 +160,8 @@ export default class RTCConnection extends EventEmitter{
 	 * */
 	private removeSender(sender: RTCRtpSender) {
 		this.msg(`remove sender`);
-		const trackId = sender.track?.id;
+		// @ts-ignore
+		const trackId = sender.track.id;
 		
 		/**
 		 * Отправка credentials. Нужна была для удаления дорожки их потока.
@@ -165,7 +171,7 @@ export default class RTCConnection extends EventEmitter{
 		 
 			this.emit(RTCConnection.EVENT_REMOVE_TRACK, cr[0]);
 		*/
-		if (trackId)
+
 		delete this.localRtpSenders[trackId];
 		
 		// Мы останавливаем саму дорожку - это ошибка. В RTCConnection дорожки
@@ -213,11 +219,12 @@ export default class RTCConnection extends EventEmitter{
 			})
 			await this.peerConnection.setLocalDescription(offer)
 			return offer;
-		} catch (e) {
+		} catch (e: any) {
 			
 			
 			this.msg('', e);
 			this.msg('', this);
+			this.msg('', e.message);
 			
 			this.msg('', offer?.type);
 			this.msg('', offer?.sdp);

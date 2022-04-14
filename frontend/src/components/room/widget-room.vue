@@ -1,16 +1,22 @@
 <template>
-    <div>
-        <p>Room {{id}}</p>
+    <div class = "widget-room">
+
+        <widget-room-header :title = "`Room ${id}`" :duration = "duration"/>
 
 
-        <widget-room-user-screen
-            v-for = "connection in users"
-            :key = "connection._index"
+        <div class = "widget-room-user-screen">
+            <widget-room-user-screen
+                v-for = "connection in users"
+                :key = "connection._index"
 
-            :connection = "connection"
-        />
+                :connection = "connection"
+            />
+        </div>
 
-        <widget-room-panel />
+
+        <div class = "widget-room__container-panel">
+            <widget-room-panel />
+        </div>
     </div>
 </template>
 
@@ -23,26 +29,30 @@
     import WidgetRoomUserScreen
         from "@/components/room/widget-room-user-screen.vue";
     import RTCConnection from "@/assets/js/rtc-connection";
+    import WidgetRoomHeader from "@/components/room/widget-room-header.vue";
 
 
     const route = useRoute();
     const id = computed(() => route.params.id);
 
 
-    let room;
-
     const users = ref<RTCConnection[]>([]);
+    const duration = ref(0);
+    const startDuration = new Date();
 
     watch(() => id.value, async () => {
 
         if (!id.value) return;
 
+        const timer = setInterval(() => {
 
+            duration.value = (new Date()).getTime() - startDuration.getTime();
 
+        }, 1000)
 
         document.title = `Room ${id.value}`
 
-        room = new Room();
+        const room = new Room();
 
         const offRoomUpdate = room.on('update', () => {
             users.value = Object.values(room.connections)
@@ -56,6 +66,7 @@
             offRoomUpdate();
             offUpdateTrack();
             room.leave();
+            clearInterval(timer)
         }
 
 
@@ -69,5 +80,23 @@
 </script>
 
 <style scoped>
+    .widget-room{
+        display: flex;
+        flex-direction: column;
+        flex-grow: 1;
+        padding: 10px;
+    }
+    .widget-room-user-screen{
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+        gap: 10px;
+        justify-content: center;
+    }
+    .widget-room__container-panel{
+        padding: 100px 0;
+        display: grid;
+        justify-content: center;
+    }
 
 </style>

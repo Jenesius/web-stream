@@ -15,9 +15,9 @@
 
     const router = useRouter();
 
-    function apply() {
-        props.callback();
-        closeModal();
+    async function apply() {
+        await props.callback();
+        await closeModal();
     }
 
 </script>

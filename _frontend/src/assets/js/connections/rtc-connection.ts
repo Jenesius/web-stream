@@ -129,7 +129,7 @@ export default class RTCConnection extends EventEmitter{
 	 * ые уже не используются. Если дорожка не указана в передаваемых значениях,
 	 * но она активна - произайдёт удаление sender. Оставшиеся дорожки будут доб
 	 * авлены
-	 * @param {RTCTrack[]} newTracks - все новые трэки
+	 * @param {MediaStreamTrack[]} newTracks - все новые трэки
 	 * */
 	updateTracks(newTracks: MediaStreamTrack[]) {
 		/**
@@ -137,6 +137,7 @@ export default class RTCConnection extends EventEmitter{
 		 * дорожках
 		 * */
 		Object.values(this.localRtpSenders).forEach(sender => {
+			// @ts-ignore
 			if (newTracks.find(track => track.id === sender.track.id)) return;
 			
 			this.removeSender(sender);
@@ -155,6 +156,7 @@ export default class RTCConnection extends EventEmitter{
 	 * */
 	private removeSender(sender: RTCRtpSender) {
 		this.msg(`remove sender`);
+		// @ts-ignore
 		const trackId = sender.track.id;
 		
 		/**
@@ -164,7 +166,8 @@ export default class RTCConnection extends EventEmitter{
 				.find(data => data[1].trackId === trackId)
 		 
 			this.emit(RTCConnection.EVENT_REMOVE_TRACK, cr[0]);
-		*/
+		 */
+		
 		delete this.localRtpSenders[trackId];
 		
 		// Мы останавливаем саму дорожку - это ошибка. В RTCConnection дорожки
@@ -172,14 +175,16 @@ export default class RTCConnection extends EventEmitter{
 		// sender.track.stop();
 		try {
 			this.peerConnection.removeTrack(sender);
-		} catch (e) {}
+		} catch (e) {
+			this.msg('', e);
+		}
 		
 	}
 	
 	private addLocalTrack(track: MediaStreamTrack) {
 		this.msg(`add local track`);
 		const sender = this.peerConnection.addTrack(track, new MediaStream([track]));
-
+		
 		// Сохранили связь
 		//this.setMediaStreamCredentials(m.id, {trackId: track.id});
 		
@@ -210,18 +215,18 @@ export default class RTCConnection extends EventEmitter{
 			})
 			await this.peerConnection.setLocalDescription(offer)
 			return offer;
-		} catch (e) {
+		} catch (e: any) {
 			
 			
-			this.msg(e);
-			this.msg('', e.tracks);
+			this.msg('', e);
 			this.msg('', this);
+			this.msg('', e.message);
 			
-			this.msg(offer?.type);
-			this.msg(offer?.sdp);
+			this.msg('', offer?.type);
+			this.msg('', offer?.sdp);
 			
 		}
-
+		
 	}
 	
 	/**
@@ -231,7 +236,7 @@ export default class RTCConnection extends EventEmitter{
 		await this.peerConnection.setRemoteDescription(offer);
 		const answer = await this.peerConnection.createAnswer();
 		await this.peerConnection.setLocalDescription(answer)
-
+		
 		return answer;
 	}
 	
@@ -273,7 +278,7 @@ export default class RTCConnection extends EventEmitter{
 		track.dispatchEvent(new Event('ended'));
 	}
 	
-
+	
 	private msg(text: string, ...any: any) {
 		console.log(`[%cpeer:${this._index}%c] ${text}`, 'color: green', 'color: black', ...any);
 	}

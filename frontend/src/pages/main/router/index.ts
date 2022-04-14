@@ -4,8 +4,8 @@ import {
 	createWebHistory,
 	RouterView
 } from 'vue-router'
-import App from "@/App.vue";
-import WidgetRoomPreset from "@/components/room/widget-room-preset.vue";
+import App from "../App.vue";
+import WidgetRoomContainer from "@/components/room/widget-room-container.vue";
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -20,7 +20,7 @@ const routes: Array<RouteRecordRaw> = [
 		children: [
 			{
 				path: ':id',
-				component: WidgetRoomPreset,
+				component: WidgetRoomContainer,
 				name: 'room'
 			}
 		]
@@ -29,7 +29,7 @@ const routes: Array<RouteRecordRaw> = [
 ]
 
 const router = createRouter({
-	history: createWebHistory(),
+	history: createWebHistory("/main"),
 	routes
 })
 

@@ -1,12 +1,11 @@
 import Socket from "../sockets/socket";
-import EventEmitter from "../event-emitter/event-emitter";
+import EventEmitter from "./../event-emitter/event-emitter";
 import PeerService
-	from "../adapter-peer-connection/peer-service";
-import RTCConnection from "../connections/rtc-connection";
+	from "./../adapter-peer-connection/peer-service";
+import RTCConnection from "./../connections/rtc-connection";
 
-import AudioSystem from "./../audio-system/audio-system";
-import RTCTrack from "../rtc-track";
-import ApplicationMediaManager, {StreamTrackType} from "../application-media-manager";
+import AudioSystem from "../audio-system/audio-system";
+import MediaManager from "../application-media-manager";
 
 export default class Room extends EventEmitter{
 	
@@ -14,26 +13,26 @@ export default class Room extends EventEmitter{
 	connections: {
 		[name: string]: RTCConnection
 	} = new Proxy({}, {
-			set: (target: Room["connections"], p: string, value) => {
-		
-		// Закрываем соединение с предыдущим peer
-		if (p in target) target[p].close();
-		target[p] = value;
-		
-		
-		return true;
-	},
-	deleteProperty: (target, p: string) => {
-		
-		if (p in target) target[p].close();
-		
-		delete target[p];
-		this.emit('update');
-		
-		return true;
-	}
+		set: (target: Room["connections"], p: string, value) => {
+			
+			// Закрываем соединение с предыдущим peer
+			if (p in target) target[p].close();
+			target[p] = value;
+			
+			
+			return true;
+		},
+		deleteProperty: (target, p: string) => {
+			
+			if (p in target) target[p].close();
+			
+			delete target[p];
+			this.emit('update');
+			
+			return true;
+		}
 	});
-
+	
 	
 	
 	constructor() {
@@ -42,7 +41,7 @@ export default class Room extends EventEmitter{
 		this.socket.emit('peer:join');
 		
 		this.join();
-
+		
 	}
 	
 	// Подключение к комнате
@@ -106,7 +105,7 @@ export default class Room extends EventEmitter{
 	}
 	
 	async createAnswer({offer, clientId}: {offer: any, clientId: any}) {
-
+		
 		const rtcConnection = await
 			PeerService.createAnswer(this.socket, this.getTracks(), clientId, offer);
 		
@@ -120,10 +119,10 @@ export default class Room extends EventEmitter{
 		rtcConnection.on(RTCConnection.EVENT_ON_ICE_CANDIDATE, candidate => {
 			this.socket.emit('peer:candidate', {clientId, candidate})
 		})
-
+		
 		
 		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
-			let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
+			const a = rtcConnection.tracks.filter(track => track.kind === 'audio')
 			
 			a.forEach(t => AudioSystem.addTrack(t))
 		})
@@ -140,7 +139,7 @@ export default class Room extends EventEmitter{
 			PeerService.removeTrack(this.socket, trackId);
 		})
 		
-		let a = rtcConnection.tracks.filter(track => track.kind === 'audio')
+		const a = rtcConnection.tracks.filter(track => track.kind === 'audio')
 		
 		a.forEach(t => AudioSystem.addTrack(t))
 		
@@ -158,12 +157,12 @@ export default class Room extends EventEmitter{
 	/**
 	 * TEST methods
 	 * */
-	private getTracks(): RTCTrack[] {
-		return ApplicationMediaManager.getTracks();
+	private getTracks(): MediaStreamTrack[] {
+		return MediaManager.getTracks();
 	}
 	
 	async recall(){
-
+		
 		Object.values(this.connections).forEach(elem => this.connectTo(elem));
 		
 		return;
@@ -180,7 +179,7 @@ export default class Room extends EventEmitter{
 		
 		connection.updateTracks(this.getTracks());
 	}
-
+	
 	
 	private async onConnect(data: {offer: RTCSessionDescription, clientId: string}) {
 		const clientId = data.clientId;
@@ -192,7 +191,7 @@ export default class Room extends EventEmitter{
 		this.socket.emit('peer:answer', { answer, clientId })
 	}
 	
-	private async onAnswer(data: {answer: RTCSessionDescription, clientId: string, constrains: MediaConstrains}) {
+	private async onAnswer(data: {answer: RTCSessionDescription, clientId: string}) {
 		
 		const clientId = data.clientId;
 		const answer   = data.answer;
@@ -210,10 +209,9 @@ export default class Room extends EventEmitter{
 	 * */
 	leave() {
 		this.socket.emit('room:leave');
+		this.socket._socket.close();
 		Object.values(this.connections).forEach(connection => connection.close())
 	}
 	
 }
-type MediaConstrains = {
-	[name in StreamTrackType]: string
-}
+

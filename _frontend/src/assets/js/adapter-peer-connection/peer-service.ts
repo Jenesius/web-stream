@@ -1,5 +1,4 @@
 import RTCConnection from "../connections/rtc-connection";
-import RTCTrack from "../rtc-track";
 
 export default class PeerService {
 	

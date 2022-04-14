@@ -9,6 +9,7 @@ import {MediaManager} from "./media-manager";
 
 export default class Room extends EventEmitter{
 	
+	
 	socket: Socket
 	connections: {
 		[name: string]: RTCConnection
@@ -120,12 +121,18 @@ export default class Room extends EventEmitter{
 			this.socket.emit('peer:candidate', {clientId, candidate})
 		})
 
-		
-		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
+		const rr = () => {
+			/**
+			 * На данный момент audio в качестве AudioSystem не работает. Audio
+			 * воспроизводится чисто в video элементах.
+			 * */
+			return this.msg(`reject audio.`);
 			const a = rtcConnection.tracks.filter(track => track.kind === 'audio')
 			
 			a.forEach(t => AudioSystem.addTrack(t))
-		})
+		}
+		
+
 		
 		
 		rtcConnection.on(RTCConnection.EVENT_NEGOTIATION_CONNECTION, async () => {
@@ -138,16 +145,21 @@ export default class Room extends EventEmitter{
 		rtcConnection.on(RTCConnection.EVENT_REMOVE_TRACK, trackId => {
 			PeerService.removeTrack(this.socket, trackId);
 		})
+		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, rr)
+		rr();
 		
-		const a = rtcConnection.tracks.filter(track => track.kind === 'audio')
+		function tt(s: MediaStream) {
+			AudioSystem.addStream(s);
+		}
+		rtcConnection.on('test-audio', tt);
 		
-		a.forEach(t => AudioSystem.addTrack(t))
 		
 		
 		
 		this.addUser(rtcConnection);
 	}
 	
+
 	
 	removeConnect({clientId}: {clientId: string}) {
 		PeerService.endConnection(this.connections[clientId]);
@@ -212,6 +224,8 @@ export default class Room extends EventEmitter{
 		this.socket._socket.close();
 		Object.values(this.connections).forEach(connection => connection.close())
 	}
-	
+	msg(msg: string) {
+		console.log(`[%croom%c] ${msg}`, 'color: green', 'color: black');
+	}
 }
 

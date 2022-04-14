@@ -1,7 +1,6 @@
 import EventEmitter, {Callback} from "./event-emitter/event-emitter";
 
 import store from "../../store/index";
-import RTCTrack from "./rtc-track";
 
 export type StreamTrackType = 'screen-video' | 'user-audio' | 'user-video';
 
@@ -9,7 +8,7 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	static EVENT_UPDATE_TRACK = 'tracks:update';
 	
 	tracks: {
-		[name in StreamTrackType]?: RTCTrack
+		[name in StreamTrackType]?: MediaStreamTrack
 	} = {}
 
 	constructor() {
@@ -95,9 +94,9 @@ export default new class ApplicationMediaManager extends EventEmitter{
 		});
 	}
 	
-	private addTrack(type: StreamTrackType, _track: MediaStreamTrack) {
+	private addTrack(type: StreamTrackType, track: MediaStreamTrack) {
 		
-		const track = RTCTrack.wrap(_track, type);
+
 		
 		
 		// @ts-ignore
@@ -137,10 +136,14 @@ export default new class ApplicationMediaManager extends EventEmitter{
 	getTracks() {
 		return Object.values(this.tracks).filter(track => track.readyState === 'live');
 	}
-	getConstrains() {
-		Object.fromEntries(
-			this.getTracks().map(track => [track.localType, track.id])
-		);
+	getCredentials() {
+		return Object.entries(this.tracks)
+		.reduce((acc: {[name: string]:boolean}, entry) => {
+			const track = entry[1]
+			acc[entry[0]] = track && track.readyState === 'live';
+			
+			return acc;
+		}, {})
 	}
 	
 }

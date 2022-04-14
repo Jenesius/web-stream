@@ -1,37 +1,41 @@
 <template>
-    {{isReady}}
-    <widget-room v-if = "isReady"/>
+    <div class = "room-preset">
+
+        <div class = "room-preset__body">
+
+            <div>
+                <p>Микрофон</p>
+                <icon name = "microphone"/>
+                <input type="email">
+            </div>
+
+        </div>
+
+        <div class = "room-preset__bottom">
+
+            <button class = "button_main button_md" @click = "handleClick">Подключиться</button>
+
+        </div>
+
+    </div>
 </template>
 
 <script setup lang = "ts">
+    import Icon from "@/components/icon/icon.vue";
 
-    import {openModal} from "jenesius-vue-modal";
-    import ModalConnectRoom from "@/components/modals/modal-connect-room.vue";
-    import AudioSystem from "@/assets/js/audio-system";
-    import {computed, onMounted, ref} from "vue";
-    import WidgetRoom from "@/components/room/widget-room.vue";
-    import {useRoute} from "vue-router";
+    const emit = defineEmits<{
+        (e: 'ready', config: any): void
+    }>()
 
-    const isReady = ref(false);
+    function handleClick() {
 
-    const route = useRoute();
-    const id = computed(() => route.params.id)
-
-
-    onMounted(() => {
-        openModal(ModalConnectRoom, {
-            id: id.value,
-            callback:async () => {
-                isReady.value = true;
-                await AudioSystem.init();
-            }
-        })
-    })
-
-
+        emit('ready', 'data')
+    }
 
 </script>
 
 <style scoped>
-
+    .room-preset__bottom{
+        padding: 14px 8px;
+    }
 </style>

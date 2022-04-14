@@ -1,6 +1,6 @@
 import ApplicationMediaManager from "./application-media-manager"
 import store from "../../store";
-import Socket from "./sockets/socket";
+
 export default function initialization() {
 	ApplicationMediaManager.onupdateTrack( () => {
 		

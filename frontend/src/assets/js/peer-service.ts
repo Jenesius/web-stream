@@ -30,21 +30,12 @@ export default class PeerService {
 	static async createAnswer(socket: any, tracks: MediaStreamTrack[], clientId: string, offer: RTCSessionDescription) {
 		const rtcConnection = PeerService.newPeerConnection(tracks, clientId);
 		
-		const pc = rtcConnection.peerConnection;
-		
-		return pc.setRemoteDescription(offer)
-		.then(() => pc.createAnswer())
+		await rtcConnection.createAnswer(offer)
 		.then(answer => {
-			//console.log(`[peer-service] create answer`, answer);
-			return answer;
-		})
-		.then(answer => pc.setLocalDescription(answer))
-		.then(() => {
-			const answer = pc.localDescription;
 			socket.emit('peer:answer', { answer, clientId })
 		})
-		//.then(() => console.log(`Answer for ${clientId} was created.`))
-		.then(() => rtcConnection)
+		
+		return  rtcConnection;
 		
 	}
 	
