@@ -9,5 +9,12 @@ module.exports = defineConfig({
 			entry: './src/pages/main/main.ts'
 		}
 	},
-	outputDir: 'build'
+	outputDir: 'build',
+	devServer: {
+		proxy: {
+			'^/api': {
+				target: 'http://localhost:3333/'
+			}
+		}
+	}
 })

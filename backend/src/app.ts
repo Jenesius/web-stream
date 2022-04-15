@@ -5,7 +5,7 @@ import path from "path";
 import connectSocket from "./socket";
 import detenv from "dotenv";
 import log4js from "log4js";
-
+import {useRouter} from "./routes";
 
 detenv.config({
     path: path.join(__dirname, '..', '.env')
@@ -30,6 +30,7 @@ app.use(express.static(frontDir));
 path.join(__dirname, '../../frontend/build/index.html')
 
 
+useRouter(app);
 
 //app.use('/rooms', roomRouter);
 
