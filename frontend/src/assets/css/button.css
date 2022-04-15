@@ -4,6 +4,8 @@
     align-items: center;
     cursor: pointer;
     border: unset;
+    width: 100%;
+    min-width: 130px;
 }
 .button_light{
     border: 1px solid #dfe1e5;

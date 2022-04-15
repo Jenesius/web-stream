@@ -1,6 +1,10 @@
 <template>
     <div class = "view-test">
 
+        <div>
+            <widget-button class = "button_md button_primary">Google</widget-button>
+        </div>
+
         <div class = "view-test-container view-test-full">
             <div class = "h4"></div>
         </div>
@@ -21,8 +25,10 @@
 </template>
 
 <script>
+    import WidgetButton from "@/components/widget-button";
     export default {
-        name: "view-test"
+        name: "view-test",
+        components: {WidgetButton}
     }
 </script>
 
