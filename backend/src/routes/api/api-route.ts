@@ -7,10 +7,12 @@ ApiRouter.get("/", (req, res) => {
 	res.send('api v1')
 })
 
-ApiRouter.use('/open', OpenApiRoute)
+ApiRouter.use('/open-api', OpenApiRoute)
+
+ApiRouter.use(authMiddleware);
 
 
-ApiRouter.get("/close", authMiddleware ,(req, res) => {
+ApiRouter.get("/close-api" ,(req, res) => {
 	res.send('api v1')
 })
 

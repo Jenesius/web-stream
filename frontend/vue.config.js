@@ -5,16 +5,12 @@ module.exports = defineConfig({
 		auth: {
 			entry: './src/pages/auth/main.ts'
 		},
-		main: {
+		index: {
 			entry: './src/pages/main/main.ts'
 		}
 	},
 	outputDir: 'build',
 	devServer: {
-		proxy: {
-			'^/api': {
-				target: 'http://localhost:3333/'
-			}
-		}
+		proxy: 'http://localhost:3333/'
 	}
 })

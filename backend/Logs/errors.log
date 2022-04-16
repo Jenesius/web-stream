@@ -383,3 +383,157 @@
     at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
     at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
     at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+[2022-04-16T23:28:41.421] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:29:30.134] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:32:08.708] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:32:08.713] [ERROR] error - ReferenceError: UserError is not defined
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:104:29)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:33:52.518] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:33:53.729] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:34:04.410] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:34:06.526] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:34:07.455] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:34:08.260] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-16T23:34:16.500] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:35:00.228] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:36:30.513] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T23:36:40.794] [ERROR] error - MongoServerError: E11000 duplicate key error collection: web-stream.users index: email_1 dup key: { email: "test" }
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\operations\insert.js:53:33
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection_pool.js:273:25
+    at handleOperationResult (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\sdam\server.js:327:20)
+    at Connection.onMessage (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:215:9)
+    at MessageStream.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:63:60)
+    at MessageStream.emit (node:events:520:28)
+    at processIncomingData (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:108:16)
+    at MessageStream._write (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:28:9)
+    at writeOrBuffer (node:internal/streams/writable:389:12)
+    at _write (node:internal/streams/writable:330:10) {
+  index: 0,
+  code: 11000,
+  keyPattern: { email: 1 },
+  keyValue: { email: 'test' },
+  [Symbol(errorLabels)]: Set(0) {}
+}
+[2022-04-16T23:37:12.337] [ERROR] error - Error: Email или Пароль не верны.
+    at Function.UserError.IncorrectUserAuthData (H:\V3Project\web-stream\backend\dist\errors\user-error.js:27:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:109:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+[2022-04-16T23:37:16.692] [ERROR] error - Error: Email или Пароль не верны.
+    at Function.UserError.IncorrectUserAuthData (H:\V3Project\web-stream\backend\dist\errors\user-error.js:27:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:109:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+[2022-04-16T23:37:19.632] [ERROR] error - Error: Пользователь не найден.
+    at Function.UserError.UserNotFound (H:\V3Project\web-stream\backend\dist\errors\user-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:105:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)

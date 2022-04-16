@@ -26,14 +26,15 @@
     import WidgetInput from "@/components/inputs/WidgetInput.vue";
     import Request from "@/assets/js/request";
     import AuthService from "@/assets/js/services/auth-service";
+    import {reactive} from "vue";
 
-    const values = {
+    const values = reactive({
         email: '',
         password: ''
-    }
+    })
 
     function onLogin() {
-        return AuthService.login()
+        return AuthService.login(values)
         .then(() => {
             window.location.replace('/main')
         })

@@ -1,4 +1,4 @@
-class UserError extends Error{
+export default class UserError extends Error{
 	static UserNotFound() {
 		return new Error(`Пользователь не найден.`);
 	}

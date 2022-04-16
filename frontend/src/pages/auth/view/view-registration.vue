@@ -17,7 +17,7 @@
         </div>
 
         <div class = "view-registration__buttons">
-            <button class = "button button_primary button_md">
+            <button class = "button button_primary button_md" @click = "onRegistration">
                 <span>Создать</span>
             </button>
         </div>
@@ -28,12 +28,20 @@
 <script setup lang = "ts">
     import WidgetInput from "@/components/inputs/WidgetInput.vue";
     import {reactive} from "vue";
+    import AuthService from "../../../assets/js/services/auth-service";
 
     const values = reactive({
         password: '',
         email: '',
         confirmPassword: ''
     })
+
+    function onRegistration() {
+        return AuthService.registration(values)
+        .then(() => {
+            window.location.replace('/');
+        })
+    }
 
 </script>
 

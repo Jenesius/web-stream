@@ -1,6 +1,7 @@
 import User from "../models/user-model";
 import bcrypt from "bcrypt";
 import TokenService from "./token-service";
+import UserError from "../errors/user-error";
 
 export default class UserService {
 	
