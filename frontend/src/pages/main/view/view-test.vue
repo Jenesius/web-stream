@@ -2,7 +2,7 @@
     <div class = "view-test">
 
         <div>
-            <widget-button class = "button_md button_primary">Google</widget-button>
+            <widget-button class = "button_md button_primary" @click = "create">Google</widget-button>
         </div>
 
         <div class = "view-test-container view-test-full">
@@ -24,12 +24,16 @@
     </div>
 </template>
 
-<script>
+<script setup lang="ts">
     import WidgetButton from "@/components/widget-button";
-    export default {
-        name: "view-test",
-        components: {WidgetButton}
+    import GroupService from "@/assets/js/services/group-service";
+
+    function create() {
+
+        GroupService.create({name: 'test'})
+
     }
+
 </script>
 
 <style scoped>
