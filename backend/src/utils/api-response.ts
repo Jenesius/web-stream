@@ -1,4 +1,5 @@
 import {Error as MongooseError} from "mongoose";
+import {Response} from "express";
 
 export default class ApiResponse{
 	static success(data: any) {
@@ -32,5 +33,9 @@ export default class ApiResponse{
 			success: false,
 			msg,
 		}
+	}
+	static setTokens(res: Response, tokens: {accessToken: string, refreshToken: string}) {
+		res.cookie('accessToken', tokens.accessToken, { httpOnly: true, });
+		res.cookie('refreshToken', tokens.refreshToken, { httpOnly: true });
 	}
 }

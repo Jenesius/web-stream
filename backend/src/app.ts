@@ -7,6 +7,7 @@ import detenv from "dotenv";
 import log4js from "log4js";
 import {useRouter} from "./routes";
 import bodyParser 	from "body-parser";
+import cookieParser from 'cookie-parser'
 
 // getting-started.js
 import mongoose from "mongoose";
@@ -34,7 +35,7 @@ const config = {
 }
 
 const frontDir = path.join(__dirname, '..', '..', 'frontend', 'build');
-
+app.use(cookieParser());
 app.use(express.static(frontDir));
 
 app.use(bodyParser.json())

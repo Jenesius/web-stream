@@ -4,14 +4,15 @@ import UserService from "../services/user-service";
 
 class AuthController {
 	
-	static login(req: Request, res: Response, next) {
+	static async login(req: Request, res: Response, next) {
 		try {
+			const {email, password} = req.body;
 			
+			const tokens = await UserService.login(email, password);
 			
+			ApiResponse.setTokens(res, tokens);
 			
-			
-			res.send(ApiResponse.success(true))
-			
+			res.send(ApiResponse.success({}))
 		} catch (e) {
 			next(e);
 		}
@@ -20,11 +21,15 @@ class AuthController {
 	static async registration(req: Request, res: Response, next) {
 		
 		try {
-			const {email} = req.body
+			const {email, password} = req.body
 			
-			await UserService.create({email});
+			const id = await UserService.create({email, password});
 			
-			res.send(ApiResponse.success(true))
+			const tokens = await UserService.generateTokens(id);
+			
+			ApiResponse.setTokens(res, tokens);
+			
+			res.send(ApiResponse.success({}))
 			
 		} catch (e) {
 			console.log('[registration] error');
