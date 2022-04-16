@@ -20,7 +20,6 @@ export default class UserService {
 		
 		await user.save();
 		
-		console.log(user);
 		
 		return user.id;
 		

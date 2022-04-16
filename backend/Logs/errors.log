@@ -249,3 +249,137 @@
   keyValue: { email: 'tes410' },
   [Symbol(errorLabels)]: Set(0) {}
 }
+[2022-04-16T17:33:59.396] [ERROR] error - JsonWebTokenError: jwt must be provided
+    at Object.module.exports [as verify] (H:\V3Project\web-stream\backend\node_modules\jsonwebtoken\verify.js:53:17)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:94:40)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:35:16.050] [ERROR] error - TokenExpiredError: jwt expired
+    at H:\V3Project\web-stream\backend\node_modules\jsonwebtoken\verify.js:152:21
+    at getSecret (H:\V3Project\web-stream\backend\node_modules\jsonwebtoken\verify.js:90:14)
+    at Object.module.exports [as verify] (H:\V3Project\web-stream\backend\node_modules\jsonwebtoken\verify.js:94:10)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:94:40)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12) {
+  expiredAt: 2022-04-16T14:35:02.000Z
+}
+[2022-04-16T17:37:19.230] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:95:43)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:37:34.123] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:95:43)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:38:13.701] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:95:43)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:40:40.267] [ERROR] error - Error: Access token is unverified.
+    at Function.AuthError.WrongVerifyAccessToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:30:16)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:95:43)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:41:30.240] [ERROR] error - Error: Access token is unverified.
+    at Function.AuthError.WrongVerifyAccessToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:30:16)
+    at Function.TokenService.isExpired (H:\V3Project\web-stream\backend\dist\services\token-service.js:97:43)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:53:49
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:4:12)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:45:58
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+[2022-04-16T17:44:09.158] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T17:44:10.402] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T17:46:49.056] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T17:47:54.649] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-16T17:48:31.423] [ERROR] error - Error: Bad "options.expiresIn" option the payload already has an "exp" property.
+    at Object.module.exports [as sign] (H:\V3Project\web-stream\backend\node_modules\jsonwebtoken\sign.js:133:20)
+    at Function.TokenService.generate (H:\V3Project\web-stream\backend\dist\services\token-service.js:49:53)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:76:47)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65

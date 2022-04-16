@@ -1,19 +1,23 @@
 import {Request, Response} from "express";
 import AuthError from "../errors/auth-error";
 import TokenService from "../services/token-service";
+import ApiResponse from "../utils/api-response";
 
-export default (req: Request, res: Response, next) => {
+export default async (req: Request, res: Response, next) => {
 	
 	try {
 		const cookies = req.cookies;
 		
-		const {accessToken} = cookies;
+		let tokens = {accessToken: cookies.accessToken, refreshToken: cookies.refreshToken};
 		
-		// Добавить прокерку на isExpired !!!
+		if (TokenService.isExpired(tokens.accessToken)) {
+			console.log('auth is expired');
+			tokens = await TokenService.refresh(tokens.refreshToken);
+			ApiResponse.setTokens(res, tokens);
+		}
 		
-		if (!accessToken) throw AuthError.Unauthorized();
-		
-		if (!TokenService.validateAccessToken(accessToken)) {
+		if (!TokenService.validateAccessToken(tokens.accessToken)) {
+			console.log('is not validated');
 			res.clearCookie('accessToken')
 			res.clearCookie('refreshToken');
 			
