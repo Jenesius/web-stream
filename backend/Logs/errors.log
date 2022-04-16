@@ -71,3 +71,181 @@
   keyValue: { email: 'test1330' },
   [Symbol(errorLabels)]: Set(0) {}
 }
+[2022-04-16T16:16:44.627] [ERROR] error - MongoServerError: E11000 duplicate key error collection: web-stream.users index: email_1 dup key: { email: "tes44124124t1330" }
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\operations\insert.js:53:33
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection_pool.js:273:25
+    at handleOperationResult (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\sdam\server.js:327:20)
+    at Connection.onMessage (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:215:9)
+    at MessageStream.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:63:60)
+    at MessageStream.emit (node:events:520:28)
+    at processIncomingData (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:108:16)
+    at MessageStream._write (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:28:9)
+    at writeOrBuffer (node:internal/streams/writable:389:12)
+    at _write (node:internal/streams/writable:330:10) {
+  index: 0,
+  code: 11000,
+  keyPattern: { email: 1 },
+  keyValue: { email: 'tes44124124t1330' },
+  [Symbol(errorLabels)]: Set(0) {}
+}
+[2022-04-16T16:17:11.866] [ERROR] error - MongoServerError: E11000 duplicate key error collection: web-stream.users index: email_1 dup key: { email: "tes40" }
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\operations\insert.js:53:33
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection_pool.js:273:25
+    at handleOperationResult (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\sdam\server.js:327:20)
+    at Connection.onMessage (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:215:9)
+    at MessageStream.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:63:60)
+    at MessageStream.emit (node:events:520:28)
+    at processIncomingData (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:108:16)
+    at MessageStream._write (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:28:9)
+    at writeOrBuffer (node:internal/streams/writable:389:12)
+    at _write (node:internal/streams/writable:330:10) {
+  index: 0,
+  code: 11000,
+  keyPattern: { email: 1 },
+  keyValue: { email: 'tes40' },
+  [Symbol(errorLabels)]: Set(0) {}
+}
+[2022-04-16T16:43:43.920] [ERROR] error - Error
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:7:15
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+    at router (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:47:12)
+[2022-04-16T16:52:40.447] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:52:45.557] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:52:46.363] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:52:46.787] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:52:47.204] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:52:47.555] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:54:32.717] [ERROR] error - Error: Для получения запрашиваемого ответа нужна аутентификация
+    at Function.AuthError.Unauthorized (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:24:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:13:43
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (H:\V3Project\web-stream\backend\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (H:\V3Project\web-stream\backend\node_modules\express\lib\router\layer.js:95:5)
+    at H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:341:12)
+    at next (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (H:\V3Project\web-stream\backend\node_modules\express\lib\router\index.js:174:3)
+[2022-04-16T16:55:07.894] [ERROR] error - Error: user validation failed: email: Path `email` is required., username: Path `username` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    email: ValidatorError: Path `email` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'email',
+      value: undefined,
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    },
+    username: ValidatorError: Path `username` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'username',
+      value: undefined,
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'user validation failed'
+}
+[2022-04-16T16:56:30.043] [ERROR] error - MongoServerError: E11000 duplicate key error collection: web-stream.users index: email_1 dup key: { email: "tes410" }
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\operations\insert.js:53:33
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection_pool.js:273:25
+    at handleOperationResult (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\sdam\server.js:327:20)
+    at Connection.onMessage (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:215:9)
+    at MessageStream.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:63:60)
+    at MessageStream.emit (node:events:520:28)
+    at processIncomingData (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:108:16)
+    at MessageStream._write (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:28:9)
+    at writeOrBuffer (node:internal/streams/writable:389:12)
+    at _write (node:internal/streams/writable:330:10) {
+  index: 0,
+  code: 11000,
+  keyPattern: { email: 1 },
+  keyValue: { email: 'tes410' },
+  [Symbol(errorLabels)]: Set(0) {}
+}

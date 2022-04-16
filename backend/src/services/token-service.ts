@@ -9,4 +9,18 @@ export default class TokenService {
 		return {accessToken, refreshToken};
 	}
 	
+	static async validateAccessToken(token: string) {
+	
+		try {
+			
+			const payload = await jwt.verify(token, process.env["JWT_ACCESS_SECRET"] as string);
+			
+			return payload;
+			
+		} catch (e) {
+			return null;
+		}
+	
+	}
+	
 }
