@@ -14,17 +14,22 @@
             <slot/>
         </span>
 
-
     </button>
 </template>
 
 <script setup lang = "ts">
     import Icon from "./icon/icon.vue";
     import WidgetLoader from "@/components/widget-loader.vue";
+    import useProgress from "@/assets/js/hooks/use-progress";
 
     const props = defineProps<{
-        icon?: string
+        icon?: string,
+        callback?: any
     }>()
+
+    let progressWrap = useProgress(props.callback);
+
+
 
 </script>
 

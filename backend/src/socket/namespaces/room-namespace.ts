@@ -41,17 +41,7 @@ export default (io: Server) => {
 
 	})
 
-	setInterval(() => {
 
-
-
-
-		console.log(
-			[...io.of('peers').sockets.keys()],
-			Object.values(peers).map(elem => elem.id)
-		)
-
-	}, 5000);
 
 
 	const peers:{[name: string]: Socket} = {};

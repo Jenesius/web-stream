@@ -6,6 +6,16 @@ import connectSocket from "./socket";
 import detenv from "dotenv";
 import log4js from "log4js";
 import {useRouter} from "./routes";
+import bodyParser 	from "body-parser";
+
+// getting-started.js
+import mongoose from "mongoose";
+
+main().catch(err => console.log(err));
+
+async function main() {
+    await mongoose.connect('mongodb://localhost:27017/web-stream');
+}
 
 detenv.config({
     path: path.join(__dirname, '..', '.env')
@@ -27,8 +37,7 @@ const frontDir = path.join(__dirname, '..', '..', 'frontend', 'build');
 
 app.use(express.static(frontDir));
 
-path.join(__dirname, '../../frontend/build/index.html')
-
+app.use(bodyParser.json())
 
 useRouter(app);
 
@@ -44,12 +53,20 @@ app.get('*', function (req, res) {
 });
 
 app.on('error', (err) => {
-    console.warn(err);
+    console.warn('on error app',err);
 })
 
 const logDir = path.join(__dirname, '..', 'Logs');
 
+
+
 log4js.configure({
-    appenders: { main: { type: "file", filename: path.join(logDir, "default.log") } },
-    categories: { default: { appenders: ['main'], level: "error" } }
+    appenders: {
+        main: { type: "file", filename: path.join(logDir, "default.log") },
+        error: {type: 'file', filename: path.join(logDir, 'errors.log')}
+    },
+    categories: {
+        default: { appenders: ['main'], level: "error" },
+        error: { appenders: ['error'], level: 'error'}
+    }
 });

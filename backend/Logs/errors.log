@@ -1,0 +1,22 @@
+[2022-04-16T15:45:44.782] [ERROR] error - {}
+[2022-04-16T15:46:51.463] [ERROR] error - MongooseError: Operation `users.insertOne()` buffering timed out after 10000ms
+    at Timeout.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:151:23)
+    at listOnTimeout (node:internal/timers:559:17)
+    at processTimers (node:internal/timers:502:7)
+[2022-04-16T15:48:32.398] [ERROR] error - MongoServerError: E11000 duplicate key error collection: test.users index: email_1 dup key: { email: "test" }
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\operations\insert.js:53:33
+    at H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection_pool.js:273:25
+    at handleOperationResult (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\sdam\server.js:327:20)
+    at Connection.onMessage (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:215:9)
+    at MessageStream.<anonymous> (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\connection.js:63:60)
+    at MessageStream.emit (node:events:520:28)
+    at processIncomingData (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:108:16)
+    at MessageStream._write (H:\V3Project\web-stream\backend\node_modules\mongodb\lib\cmap\message_stream.js:28:9)
+    at writeOrBuffer (node:internal/streams/writable:389:12)
+    at _write (node:internal/streams/writable:330:10) {
+  index: 0,
+  code: 11000,
+  keyPattern: { email: 1 },
+  keyValue: { email: 'test' },
+  [Symbol(errorLabels)]: Set(0) {}
+}
