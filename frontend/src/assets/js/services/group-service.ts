@@ -14,4 +14,8 @@ export default class GroupService {
 		
 	}
 	
+	static async getMembers(groupId: string) {
+		return Request(`/close-api/groups/${groupId}/members`)
+	}
+	
 }

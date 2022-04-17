@@ -25,4 +25,16 @@ export default class GroupController{
 	
 	static async getList () {}
 	
+	static async getMembers(req: Request, res: Response, next) {
+		try {
+			const {groupId} = req.params;
+			
+			const members = await GroupService.getMembers(String(groupId));
+			
+			res.json(ApiResponse.success(members));
+			
+		} catch (e) {
+			next(e);
+		}
+	}
 }

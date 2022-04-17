@@ -1,5 +1,6 @@
 import Group from "../models/group-model";
 import GroupInvite from "../models/group-invite-model";
+import GroupMember from "../models/group-member-model";
 
 export default class GroupService {
 	
@@ -35,6 +36,21 @@ export default class GroupService {
 		return invites;
 	}
 	
+	static async getMembers(groupId: string) {
+	
+		const array = await GroupMember.find({
+			groupId
+		}, {
+			_id: 0,
+			groupId: 1,
+			user: 1
+		}).populate('user', {
+			id: 1,
+			username: 1
+		})
+	
+		return array;
+	}
 }
 
 interface GroupCreateData {
