@@ -1,0 +1,12 @@
+.modal-wrap {
+    background-color: white;
+    border-radius: 5px;
+    padding: 10px;
+    width: 90%;
+}
+
+@media screen and (min-width: 960px){
+    .modal-wrap{
+        max-width: 650px;
+    }
+}

@@ -2,11 +2,11 @@
 
 
 
-    <button class = "button widget-button">
+    <button class = "button widget-button" @click = "progress.call()">
 
         <div class = "widget-button__side">
             <icon :name = "icon"/>
-            <widget-loader/>
+            <widget-loader v-if = "progress.wait"/>
         </div>
 
 
@@ -27,7 +27,7 @@
         callback?: any
     }>()
 
-    let progressWrap = useProgress(props.callback);
+    let progress = useProgress(props.callback);
 
 
 

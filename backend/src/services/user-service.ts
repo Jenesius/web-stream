@@ -32,7 +32,7 @@ export default class UserService {
 		
 		if (!user) throw UserError.UserNotFound();
 		
-		const tokens = TokenService.generate({id: user.id});
+		const tokens = TokenService.generate({userId: user.id});
 		
 		user.refreshToken = tokens.refreshToken;
 		await user.save();
@@ -53,10 +53,32 @@ export default class UserService {
 		return await UserService.generateTokens(user.id);
 	}
 	
+	static async getById(id: string) {}
+	
+	static async getList(data: UserListFilters = {}) {
+		
+		const i = new RegExp(`^${data.startsWith || ''}`);
+		
+		const result = await User.find({
+			username: {
+				$regex: i
+			}
+		}, {
+			email: 1,
+			username: 1,
+			id: 1
+		}).exec()
+		
+		return result;
+	}
+	
 }
 
 interface CreateUserParam {
 	email: string,
 	activated?: boolean,
 	password?: string
+}
+interface UserListFilters {
+	startsWith?: string
 }

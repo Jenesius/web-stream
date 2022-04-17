@@ -9,7 +9,9 @@ export default class GroupController{
 		
 			const userId = req.userId;
 			
-			const groupId = await GroupService.create(userId, req.body);
+			const {name, invites} = req.body;
+			
+			const groupId = await GroupService.create(userId, {name, invites});
 			
 			res.json(ApiResponse.success({groupId}))
 		

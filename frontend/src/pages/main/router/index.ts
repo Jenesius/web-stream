@@ -4,7 +4,7 @@ import {
 	createWebHistory,
 	RouterView
 } from 'vue-router'
-import App from "../App.vue";
+import ViewGroup from "./../view/view-group.vue";
 import WidgetRoomContainer from "@/components/room/widget-room-container.vue";
 import ViewTest from "./../view/view-test.vue";
 
@@ -18,6 +18,17 @@ const routes: Array<RouteRecordRaw> = [
 		path: '/test',
 		name: 'test',
 		component: ViewTest
+	},
+	{
+		path: '/group',
+		component: RouterView,
+		children: [
+			{
+				path: ':id',
+				name: 'group',
+				component: ViewGroup
+			}
+		]
 	},
 	{
 		path: '/rooms',

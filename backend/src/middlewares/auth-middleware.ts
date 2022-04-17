@@ -23,7 +23,9 @@ export default async (req: Request, res: Response, next) => {
 			
 			throw AuthError.Unauthorized();
 		}
-		
+		console.log(TokenService.getData(tokens.accessToken))
+		req.userId = TokenService.getData(tokens.accessToken).userId;
+		console.log(req.userId);
 		next();
 		
 	} catch (e) {

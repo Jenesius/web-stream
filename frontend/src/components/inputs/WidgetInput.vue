@@ -4,6 +4,7 @@
         <div class = "input-block">
             <input :type = "inputType" class = "widget-input"
                    :value = "modelValue"
+                   :placeholder="placeholder"
                    @input = "$emit('update:modelValue', $event.target.value)" />
 
             <div class = "input-block__password">
@@ -28,7 +29,8 @@
 
     const props = defineProps<{
         modelValue: any,
-        password?: boolean
+        password?: boolean,
+        placeholder?: string
     }>()
 
     const inputType = computed(() =>

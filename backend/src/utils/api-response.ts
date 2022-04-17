@@ -2,10 +2,10 @@ import {Error as MongooseError} from "mongoose";
 import {Response} from "express";
 
 export default class ApiResponse{
-	static success(data: any) {
+	static success(result: any) {
 		return {
 			success: true,
-			data
+			data: result
 		}
 	}
 	static error(err: any) {

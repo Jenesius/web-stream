@@ -537,3 +537,215 @@
     at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
     at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
     at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-17T14:43:19.334] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-17T14:44:57.024] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-17T14:45:15.257] [ERROR] error - Error: data and hash arguments required
+    at Object.compare (H:\V3Project\web-stream\backend\node_modules\bcrypt\bcrypt.js:208:17)
+    at H:\V3Project\web-stream\backend\node_modules\bcrypt\promises.js:29:12
+    at new Promise (<anonymous>)
+    at Object.module.exports.promise (H:\V3Project\web-stream\backend\node_modules\bcrypt\promises.js:20:12)
+    at Object.compare (H:\V3Project\web-stream\backend\node_modules\bcrypt\bcrypt.js:204:25)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:106:66)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-17T14:47:35.051] [ERROR] error - Error: data and hash arguments required
+    at Object.compare (H:\V3Project\web-stream\backend\node_modules\bcrypt\bcrypt.js:208:17)
+    at H:\V3Project\web-stream\backend\node_modules\bcrypt\promises.js:29:12
+    at new Promise (<anonymous>)
+    at Object.module.exports.promise (H:\V3Project\web-stream\backend\node_modules\bcrypt\promises.js:20:12)
+    at Object.compare (H:\V3Project\web-stream\backend\node_modules\bcrypt\bcrypt.js:204:25)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\user-service.js:107:66)
+    at step (H:\V3Project\web-stream\backend\dist\services\user-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\user-service.js:14:53)
+    at fulfilled (H:\V3Project\web-stream\backend\dist\services\user-service.js:5:58)
+    at processTicksAndRejections (node:internal/process/task_queues:96:5)
+[2022-04-17T18:12:36.640] [ERROR] error - Error: group validation failed: name: Path `name` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    name: ValidatorError: Path `name` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'name',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'group validation failed'
+}
+[2022-04-17T18:15:27.836] [ERROR] error - Error: group validation failed: creator: Path `creator` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    creator: ValidatorError: Path `creator` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'creator',
+      value: undefined,
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'group validation failed'
+}
+[2022-04-17T18:19:50.350] [ERROR] error - Error: group validation failed: creator: Path `creator` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    creator: ValidatorError: Path `creator` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'creator',
+      value: undefined,
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'group validation failed'
+}
+[2022-04-17T18:20:39.515] [ERROR] error - Error: group validation failed: creator: Path `creator` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    creator: ValidatorError: Path `creator` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'creator',
+      value: undefined,
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'group validation failed'
+}
+[2022-04-17T18:27:05.386] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-17T18:27:07.253] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:72:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:66:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-17T18:28:17.871] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:73:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:67:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-17T18:28:26.659] [ERROR] error - Error: group validation failed: name: Path `name` is required.
+    at ValidationError.inspect (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\error\validation.js:48:26)
+    at formatValue (node:internal/util/inspect:780:19)
+    at inspect (node:internal/util/inspect:345:10)
+    at formatWithOptionsInternal (node:internal/util/inspect:2165:40)
+    at Object.format (node:internal/util/inspect:2019:10)
+    at basicLayout (H:\V3Project\web-stream\backend\node_modules\log4js\lib\layouts.js:63:57)
+    at app (H:\V3Project\web-stream\backend\node_modules\log4js\lib\appenders\file.js:76:23)
+    at H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:43:5
+    at Array.forEach (<anonymous>)
+    at sendLogEventToAppender (H:\V3Project\web-stream\backend\node_modules\log4js\lib\log4js.js:42:21) {
+  errors: {
+    name: ValidatorError: Path `name` is required.
+        at validate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1330:13)
+        at SchemaString.SchemaType.doValidate (H:\V3Project\web-stream\backend\node_modules\mongoose\lib\schematype.js:1314:7)
+        at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\document.js:2750:18
+        at processTicksAndRejections (node:internal/process/task_queues:78:11) {
+      properties: [Object],
+      kind: 'required',
+      path: 'name',
+      value: '',
+      reason: undefined,
+      [Symbol(mongoose:validatorError)]: true
+    }
+  },
+  _message: 'group validation failed'
+}
