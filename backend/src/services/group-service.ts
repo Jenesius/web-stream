@@ -49,7 +49,7 @@ export default class GroupService {
 			username: 1
 		})
 	
-		return array;
+		return array.map(elem => elem.user);
 	}
 }
 

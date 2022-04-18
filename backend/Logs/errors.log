@@ -771,3 +771,36 @@
     at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\query.js:2257:19
     at H:\V3Project\web-stream\backend\node_modules\mongoose\lib\helpers\query\completeMany.js:36:32
     at processTicksAndRejections (node:internal/process/task_queues:78:11)
+[2022-04-18T12:33:07.899] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:73:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:67:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-18T12:33:09.960] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:73:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:67:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)
+[2022-04-18T12:34:02.148] [ERROR] error - Error: Refresh token is unverified.
+    at Function.AuthError.WrongVerifyRefreshToken (H:\V3Project\web-stream\backend\dist\errors\auth-error.js:33:16)
+    at Function.<anonymous> (H:\V3Project\web-stream\backend\dist\services\token-service.js:73:59)
+    at step (H:\V3Project\web-stream\backend\dist\services\token-service.js:33:23)
+    at Object.next (H:\V3Project\web-stream\backend\dist\services\token-service.js:14:53)
+    at H:\V3Project\web-stream\backend\dist\services\token-service.js:8:71
+    at new Promise (<anonymous>)
+    at __awaiter (H:\V3Project\web-stream\backend\dist\services\token-service.js:4:12)
+    at Function.TokenService.refresh (H:\V3Project\web-stream\backend\dist\services\token-service.js:67:16)
+    at H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:55:65
+    at step (H:\V3Project\web-stream\backend\dist\middlewares\auth-middleware.js:33:23)

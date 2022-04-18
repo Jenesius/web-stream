@@ -11,13 +11,11 @@ export default async (req: Request, res: Response, next) => {
 		let tokens = {accessToken: cookies.accessToken, refreshToken: cookies.refreshToken};
 		
 		if (TokenService.isExpired(tokens.accessToken)) {
-			console.log('auth is expired');
 			tokens = await TokenService.refresh(tokens.refreshToken);
 			ApiResponse.setTokens(res, tokens);
 		}
 		
 		if (!TokenService.validateAccessToken(tokens.accessToken)) {
-			console.log('is not validated');
 			res.clearCookie('accessToken')
 			res.clearCookie('refreshToken');
 			

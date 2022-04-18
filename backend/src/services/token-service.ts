@@ -6,8 +6,6 @@ export default class TokenService {
 	
 	static generate(payload: any) {
 	
-		console.log('generate paload', payload);
-		
 		const accessToken = jwt.sign(payload, process.env["JWT_ACCESS_SECRET"] as string, {expiresIn: '1m'})
 		const refreshToken =jwt.sign(payload, process.env["JWT_REFRESH_SECRET"] as string, {expiresIn: '30d'})
 	
