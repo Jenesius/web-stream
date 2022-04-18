@@ -67,7 +67,8 @@ log4js.configure({
         error: {type: 'file', filename: path.join(logDir, 'errors.log')}
     },
     categories: {
-        default: { appenders: ['main'], level: "error" },
+        default: { appenders: ['main'], level: 'all' },
+        'client-journal': {appenders: ['main'], level: 'info'},
         error: { appenders: ['error'], level: 'error'}
     }
 });

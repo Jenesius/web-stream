@@ -1,6 +1,6 @@
-import Socket from "./socket";
+import SocketOld from "./socket.old";
 
-export default class RoomSocket extends Socket{
+export default class RoomSocket extends SocketOld{
 	
 	constructor() {
 		super('rooms');

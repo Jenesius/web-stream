@@ -1,7 +1,7 @@
 import {io, Socket as test} from "socket.io-client";
 import {Callback} from "@/assets/js/event-emitter";
 
-export default class Socket{
+export default class SocketOld {
 	_socket: test
 	get socket() {
 		return this._socket;

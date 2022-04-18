@@ -1,4 +1,4 @@
-import Socket from "./socket";
+import SocketOld from "./socket.old";
 import EventEmitter from "./event-emitter";
 import PeerService
 	from "./peer-service";
@@ -11,7 +11,7 @@ import {UserConnectionInfo} from "@/assets/js/types/user-types";
 export default class Room extends EventEmitter{
 	
 	
-	socket: Socket
+	socket: SocketOld
 	connections: {
 		[name: string]: RTCConnection
 	} = new Proxy({}, {
@@ -46,7 +46,7 @@ export default class Room extends EventEmitter{
 	
 	constructor({userInfo}: {userInfo: UserConnectionInfo}) {
 		super();
-		this.socket = new Socket('peers');
+		this.socket = new SocketOld('peers');
 		this.socket.emit('peer:join');
 		
 		this.join();

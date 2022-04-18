@@ -1,6 +1,6 @@
 import RTCConnection from "./rtc-connection";
 import Room from "@/assets/js/room";
-import Socket from "@/assets/js/socket";
+import SocketOld from "@/assets/js/socket.old";
 import {UserConnectionInfo} from "@/assets/js/types/user-types";
 
 export default class PeerService {
@@ -75,7 +75,7 @@ export default class PeerService {
 }
 
 interface CreateAnswerParams {
-	socket: Socket,
+	socket: SocketOld,
 	tracks: MediaStreamTrack[],
 	clientId: string,
 	offer: RTCSessionDescription,
