@@ -1,20 +1,23 @@
 <template>
     <div class = "view-test">
 
-        <widget-users-invite v-model:users = "array"/>
-
-        {{array}}
     </div>
 </template>
 
 <script setup lang="ts">
 
-    import {ref} from "vue";
+    import useSocket from "@/assets/js/use-socket/use-socket";
 
-    const array = ref([]);
+    const socket = useSocket({namespace: 'rooms'})
+
+    socket.on('connect', () => {
+
+        console.log('++')
+        socket.emit('room:join', {roomId: 1});
+
+    })
 
 
-import WidgetUsersInvite from "@/components/users-invite/widget-users-invite.vue";
 </script>
 
 <style scoped>

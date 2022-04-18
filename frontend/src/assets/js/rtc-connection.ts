@@ -1,6 +1,7 @@
 import EventEmitter from "./event-emitter";
 import makeId from "./make-id";
 import PeerError from "./peer-error";
+import SignalingChannel from "@/assets/js/signaling-channel";
 
 export default class RTCConnection extends EventEmitter{
 	
@@ -19,11 +20,6 @@ export default class RTCConnection extends EventEmitter{
 	clientId: string;
 	
 	/**
-	 * Объект сопоставления. На данный момент не используется
-	 * */
-	credentials: RTCConnectionParams["credentials"]
-	
-	/**
 	 * Массив трэков, которые предоставляет удалённый пользователь.
 	 * Почему используется именно массив, а не объект: Т.к. нельзя точно сказать
 	 * какие именно tracks будут хранится у нас. Задача RTCConnection дать удобн
@@ -38,41 +34,43 @@ export default class RTCConnection extends EventEmitter{
 		[name: string]: RTCRtpSender
 	} = {};
 	
-	readonly _index = makeId(6);
-	readonly id = makeId(16);
+	readonly id = makeId(16); // Уникальный нашего идентификатор соединения.
 	
-	constructor({tracks, clientId, credentials = {}}: RTCConnectionParams) {
+	private makingOffer = false;
+	private ignoreOffer = false;
+	polite: boolean;
+	
+	get pc(): RTCPeerConnection {
+		return this.peerConnection;
+	}
+	
+	constructor({tracks, clientId, polite}: RTCConnectionParams) {
 		super();
-		this.msg(`new connect to %c${clientId}`, 'color: blue');
+		this.msg(`new connect %c${this.id}%c to %c${clientId}`, 'color: blue', 'color: black', 'color: green');
+		this.polite = polite;
 		
 		this.clientId = clientId;
-		this.credentials = credentials;
 		
 		const iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
 		
 		this.peerConnection = new RTCPeerConnection({
 			iceServers,
-			
 		});
 		
 		this.updateTracks(tracks); // Устанавливаем новый дорожки
 		
-		
-		
 		this.peerConnection.ontrack = (e: RTCTrackEvent) => {
 			
-			this.emit('test-audio',e.streams[0])
+			this.emit('test-audio', e.streams[0])
 			
 			try {
-				if (!e.streams.length) throw PeerError.OnTrackStreamsIsEmpty(this, e);
+				if (!e.streams.length) return PeerError.OnTrackStreamsIsEmpty(this, e);
 				
 				// Подписываемся на удаление дорожки
 				// ВОзможно нудно подписываться на все стримы, которые есть
 				e.streams[0].onremovetrack = (ev) => {
 					this.removeRemoteTrack(ev.track.id);
 				}
-				const streamId = e.streams[0].id;
-				this.setMediaStreamCredentials(streamId, {trackId: e.track.id})
 				
 				this.addRemoteTrack(e.track);
 			} catch (e) {
@@ -81,24 +79,91 @@ export default class RTCConnection extends EventEmitter{
 			
 		}
 		
+		/**
+		 * Изменение статуса подключения
+		 * */
 		this.peerConnection.oniceconnectionstatechange = () =>
+		{
 			this.msg(`state is ${this.peerConnection.iceConnectionState}`)
+			
+			if (this.pc.iceConnectionState === "failed") this.pc.restartIce();
+		}
 		
-		this.peerConnection.onicecandidate = e => {
-			this.emit(RTCConnection.EVENT_ON_ICE_CANDIDATE, e.candidate)
+		this.pc.onicecandidate = ({candidate}) => {
+			SignalingChannel.send({
+				recipient: this.clientId,
+				sender: this.id,
+				candidate
+			})
 		}
 		this.peerConnection.onicecandidateerror = e => {
 			console.warn(`Handle error PeerConnection with client ${clientId}`, e);
 		}
 		
-		this.peerConnection.onnegotiationneeded = () => {
+		this.pc.onnegotiationneeded = async () => {
 			this.msg(`negotiation`)
-			this.emit(RTCConnection.EVENT_NEGOTIATION_CONNECTION);
+			
+			try {
+				this.makingOffer = true;
+				await this.pc.setLocalDescription();
+				SignalingChannel.send({
+					recipient: this.clientId,
+					sender: this.id,
+					description: this.pc.localDescription
+				})
+			} catch (e) {
+				console.error(e);
+			} finally {
+				this.makingOffer = false;
+			}
+			
 		}
 		
 		// @ts-ignore
 		if (!window.globalPeers) window.globalPeers = []; window.globalPeers.push(this);
 		
+		
+		// @ts-ignore
+		SignalingChannel.onmessage(window.userId + '' + this.clientId, async ({ description, candidate }) => {
+			
+			this.msg(`on message, d: ${!!description}, c: ${!!candidate}`)
+
+	
+			
+			try {
+				if (description) {
+					const offerCollision = (description.type == "offer") &&
+						(this.makingOffer || this.pc.signalingState != "stable");
+					
+					this.ignoreOffer = !this.polite && offerCollision;
+					if (this.ignoreOffer) {
+						return;
+					}
+					
+					await this.pc.setRemoteDescription(description);
+					if (description.type == "offer") {
+						await this.pc.setLocalDescription();
+						SignalingChannel.send({ sender: this.id, recipient: this.clientId, description: this.pc.localDescription })
+					}
+				} else if (candidate) {
+					try {
+						await this.pc.addIceCandidate(candidate);
+					} catch(err) {
+						if (!this.ignoreOffer) {
+							throw err;
+						}
+					}
+				}
+			} catch(err) {
+				console.error(err);
+			}
+		});
+		
+	}
+	
+	get _index() {
+		console.warn('_index deprecated. Use id.');
+		return this.id;
 	}
 	
 	/**
@@ -108,7 +173,7 @@ export default class RTCConnection extends EventEmitter{
 		
 		this.msg('closed');
 		
-		this.peerConnection.close(); // Закрываем соединение
+		this.pc.close(); // Закрываем соединение
 		super.cleanEvents();		 // Удаляем все эвенты
 		
 		// Удаляем всех сендеров
@@ -214,22 +279,12 @@ export default class RTCConnection extends EventEmitter{
 				/*
 				offerToReceiveAudio: true,
 				offerToReceiveVideo: true
-				
-				
 				 */
 			})
 			await this.peerConnection.setLocalDescription(offer)
 			return offer;
 		} catch (e: any) {
-			
-			
-			this.msg('', e);
-			this.msg('', this);
-			this.msg('', e.message);
-			
-			this.msg('', offer?.type);
-			this.msg('', offer?.sdp);
-			
+			console.log(e);
 		}
 
 	}
@@ -288,38 +343,13 @@ export default class RTCConnection extends EventEmitter{
 		console.log(`[%cpeer:${this._index}%c] ${text}`, 'color: green', 'color: black', ...any);
 	}
 	
-	/**
-	 *
-	 * !!! НА ДАННЫЙ МОМЕНТ РАБОТА С CREDENTIALS НЕ ОСУЩЕСТВЛЯЕТСЯ. !!!
-	 *
-	 * Используется для того, чтобы сохранить связь между удалённым пользоватьск
-	 * им трэком.
-	 * */
-	streamMediaCredentials: {
-		[streamId: string]: {
-			trackId: string,
-		}
-	} = {}
-	/**
-	 * @description Установки связи между трэком и его назначением.
-	 * */
-	public setMediaStreamCredentials(streamId: string, data: {trackId: string}) {
-		this.streamMediaCredentials[streamId] = {
-			trackId: data.trackId
-		}
-	}
-	
-	public getMediaStreamCredentials() {
-		return this.streamMediaCredentials;
-	}
+
 	
 }
 
 interface RTCConnectionParams {
 	tracks: MediaStreamTrack[],
 	clientId: string,
-	credentials?: {
-		[type: string]: string
-	}
+	polite: boolean
 }
 

@@ -1,11 +1,58 @@
 import ApiError from "./api-error";
 import {Socket} from "socket.io";
+import RoomError from "../errors/room-error";
+import EventEmitter from "jenesius-event-emitter";
 
 export type RoomId = string;
 
 
+export default class Room extends EventEmitter{
+    static EVENT_NEW_USER = 'room:new-user'
+    static EVENT_UPDATE_USERS = 'room:update-users'
+    
+    users: {
+        [name: string]: {
+            name: string
+        }
+    } = {}
+    
+    /**
+     * @description Connection user to room.
+     * */
+    join(params: IJoinParams) {
+        
+        const userId = params.id;
+        
+        if (this.include(userId)) throw RoomError.UserAlreadyConnected();
+     
+        // Сохранение пользователя в хранилище
+        this.users[userId] = {
+            name: params.name
+        }
+        
+        // Сообщаем о том, что новый пользователь был добавлен
+        this.emit(Room.EVENT_NEW_USER, userId);
+    }
+    include(id: string) {
+        return (id in this.users);
+    }
+    
+    leave(userId: string) {
+        if (!this.include(userId)) return;
+        
+        delete this.users[userId];
+        this.emit(Room.EVENT_UPDATE_USERS);
+    }
+    
+}
+interface IJoinParams {
+    id: string,
+    name: string
+}
 
-export default class Room{
+
+
+export class Room1{
 
     users: string[]
     id: RoomId

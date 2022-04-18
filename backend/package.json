@@ -21,6 +21,7 @@
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.0.0",
     "express": "^4.17.2",
+    "jenesius-event-emitter": "^1.0.0",
     "jsonwebtoken": "^8.5.1",
     "log4js": "^6.4.4",
     "mongodb": "^4.5.0",

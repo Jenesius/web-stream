@@ -19,5 +19,5 @@ export default function useSocket(params: ISocketParams) {
 }
 
 interface ISocketParams{
-	namespace: 'journal'
+	namespace: 'journal' | 'rooms' | 'signals'
 }

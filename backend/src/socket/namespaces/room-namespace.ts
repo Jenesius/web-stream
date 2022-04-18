@@ -1,118 +1,70 @@
 import {Server, Socket} from "socket.io";
-import Room from "../../classes/room";
-function handleRouteSocket (socket: Socket, event: string, callback) {
 
-	socket.on(event, payload => {
 
-		try {
-			callback(payload, socket);
-		} catch (e) {
-			console.log(e);
-			socket.emit('error', e);
-		}
-
-	})
-
-}
 export default (io: Server) => {
 
-	const DefaultRoom = new Room('Default', io.of('/rooms'));
 
+	const users:{
+		[name: string]: Socket
+	} = {};
+	/**
+	 * Пользователь создал соединение с room-namespace.
+	 * */
 	io.of('/rooms').on('connection', socket => {
-
-		handleRouteSocket(socket, 'room:join', () => {
-			DefaultRoom.connect(socket);
-		})
-
-		handleRouteSocket(socket, 'room:leave', () => {
-			DefaultRoom.disconnect(socket);
-		})
-
-		// Default handlers
-		handleRouteSocket(socket, 'disconnect', () => {
+		
+		// При подключении к комнате, сигнализируем всех о новом пользователе
+		socket.on('room:join', (data) => {
 			try {
-				DefaultRoom.disconnect(socket);
+				const {roomId, userId} = data;
+				
 
+				socket.emit('room:users', Object.keys(users))
+				socket.join(roomId);
+				socket.broadcast.to(roomId).emit('room:new-connection', {userId});
+				
+				users[userId] = socket;// Saving socket
+				
 			} catch (e) {
-				//console.log(e);
+				console.log(`[room:join]`, e)
 			}
-		})
 
-
-	})
-
-
-
-
-	const peers:{[name: string]: Socket} = {};
-
-	io.of('/peers').on('connection', socket => {
-
-		const ROOM_NAME = 'test';
-
-		/**
-		 * 1. Пользователь подключается к комнате
-		 * 2. Просим всех пользователей данной комнаты позвонить ему
-		 *
-		 * */
-		socket.on('peer:join', (() => {
-
-			socket.join(ROOM_NAME); // Join test room
-
-			// Просим создать offer для clientId
-			socket.broadcast.to(ROOM_NAME).emit('peer:new-offer', {
-				clientId: socket.id
-			})
-
-			peers[socket.id] = socket; // [TEST] подсоединяем в пирам
-		}))
-
-
-		/**
-		 * Передача цели offer'a
-		 * Клиент должен его установить в setRemoteDescription
-		 * */
-		socket.on('peer:offer', data => {
-			const {offer, clientId, credentials, userInfo} = data;
-
-			peers[clientId]?.emit('peer:offer', {offer, clientId: socket.id, credentials, userInfo});
-		})
-
-		socket.on('peer:candidate', data => {
-			const {candidate, clientId} = data;
-
-			peers[clientId]?.emit('peer:candidate', {candidate, clientId: socket.id})
-
-		})
-
-		socket.on('peer:answer', data => {
-
-			const {answer, clientId, userInfo} = data;
-
-			peers[clientId]?.emit('peer:answer', {answer, clientId: socket.id, userInfo})
-
-		})
-
-		socket.on('peer:remove-track', trackId => {
-			
-			socket.broadcast.to(ROOM_NAME).emit('peer:remove-track', {
-				clientId: socket.id,
-				trackId
-			})
-			
 		})
 		
+		socket.on('room:connect', userId => {
+			
+			// @ts-ignore
+			const senderId = Object.entries(users).find(a => a[1].id === socket.id)[0];
+			
+			// @ts-ignore
+			users[userId].emit('room:connect', senderId);
+		})
+		
+
+
+		
 		socket.on('disconnect', () => {
-
-			delete peers[socket.id];
-
+			
+			// @ts-ignore
+			const senderId = Object.entries(users).find(a => a[1].id === socket.id)[0];
+			delete users[senderId];
+			
+			/*
+			
 			socket.broadcast.to(ROOM_NAME).emit('peer:user-leave', {
 				clientId: socket.id
 			})
-
+			*/
 		})
+		
 
 	})
+	
+	io.of('/rooms').adapter.on('leave-room', (room, socketId) => {
+		io.to(room).emit('room:user-leave', socketId)
+		
+	});
+
+
 
 
 }
