@@ -22,6 +22,11 @@
         store.commit("MediaModule/UPDATE_CREDENTIALS", MediaManager.getCredentials())
     })
 
+    const socketDefault = useSocket();
+    socketDefault.on('identify', data => {
+        console.log(data);
+    })
+
     const socket = useSocket({namespace: 'journal'})
 
     socket.on('connect', e => {

@@ -5,20 +5,24 @@ import RoomNamespace from "./namespaces/room-namespace";
 import PeerNamespace from "./namespaces/peer-namespace";
 import JournalNamespace from "./namespaces/journal-namespace";
 import GroupNamespace from "./namespaces/group-namespace";
-import SignalingNamespace from "./namespaces/signaling-channel-namespace";
 
+import defaultNamespace from "./namespaces/default-namespace"
 
 export default function connectSocket(server: http.Server) {
 
-    const io = new Server(server);
+    const io = new Server(server, {
+        cookie: true
+    });
 
+    io.on('connection', s => defaultNamespace(io, s));
+    
     RoomNamespace(io);
     JournalNamespace(io);
     PeerNamespace(io);
     GroupNamespace(io);
     
     
-    io.of('/signals').on('connection', s => SignalingNamespace(io, s))
+    //io.of('/signals').on('connection', s => SignalingNamespace(io, s))
     
     return io;
 }

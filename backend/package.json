@@ -26,6 +26,7 @@
     "log4js": "^6.4.4",
     "mongodb": "^4.5.0",
     "mongoose": "^6.3.0",
-    "peer": "^0.6.1"
+    "peer": "^0.6.1",
+    "randomstring": "^1.2.2"
   }
 }

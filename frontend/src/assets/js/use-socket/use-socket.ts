@@ -13,11 +13,13 @@ const manager = new Manager(url, {
 });
 
 
-export default function useSocket(params: ISocketParams) {
+export default function useSocket(params: ISocketParams = {}) {
 	
-	return manager.socket('/' + params.namespace);
+	const namespace = (params.namespace) ? '/' + params.namespace: '' ;
+	
+	return manager.socket(namespace);
 }
 
 interface ISocketParams{
-	namespace: 'journal' | 'rooms' | 'signals'
+	namespace?: 'journal' | 'rooms' | 'signals'
 }
