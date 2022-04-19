@@ -1,1 +1,45 @@
-<mxfile host="app.diagrams.net" modified="2022-04-19T12:13:06.138Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" version="16.1.0" etag="D1Et0FdPWsYmoDo-H7Fg" type="github"><diagram id="873gDkjyZv26_UyiB-dg">UzV2zq1wL0osyPDNT0nNUTV2VTV2LsrPL4GwciucU3NyVI0MMlNUjV1UjYwMgFjVyA2HrCFY1qAgsSg1rwSLBiADYTaQg2Y1AA==</diagram></mxfile>
+<mxfile host="app.diagrams.net" modified="2022-04-19T12:17:06.551Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36" etag="DGPqXcHjUChILfd2Sank" version="16.1.0" type="github">
+  <diagram id="873gDkjyZv26_UyiB-dg" name="Page-1">
+    <mxGraphModel dx="1673" dy="829" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="bDpstg4epVpF0_PyE3lh-3" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bDpstg4epVpF0_PyE3lh-1" target="bDpstg4epVpF0_PyE3lh-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-1" value="Подключение к signals" style="shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="190" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-5" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bDpstg4epVpF0_PyE3lh-2" target="bDpstg4epVpF0_PyE3lh-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-6" value="Да" style="edgeLabel;html=1;align=center;verticalAlign=middle;resizable=0;points=[];" vertex="1" connectable="0" parent="bDpstg4epVpF0_PyE3lh-5">
+          <mxGeometry x="-0.1451" y="-2" relative="1" as="geometry">
+            <mxPoint x="-41" y="-12" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bDpstg4epVpF0_PyE3lh-2" target="bDpstg4epVpF0_PyE3lh-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-2" value="Авторизо&lt;br&gt;ванный?" style="rhombus;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="310" y="270" width="80" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-8" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bDpstg4epVpF0_PyE3lh-4" target="bDpstg4epVpF0_PyE3lh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-4" value="Получение id из token" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-7" value="Сохранение socket" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="290" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-11" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="bDpstg4epVpF0_PyE3lh-9" target="bDpstg4epVpF0_PyE3lh-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="bDpstg4epVpF0_PyE3lh-9" value="Генерация id для анонимного пользователя" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="80" y="380" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
