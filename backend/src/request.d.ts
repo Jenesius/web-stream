@@ -6,4 +6,12 @@ declare global{
             userId: string,
         }
     }
+
+}
+
+
+declare module 'socket.io' {
+    interface Socket {
+        globalConnectionId: string
+    }
 }

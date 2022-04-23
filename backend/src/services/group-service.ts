@@ -19,7 +19,6 @@ export default class GroupService {
 			userId
 		})
 		
-		
 		return group.id;
 		
 	}

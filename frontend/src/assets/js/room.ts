@@ -52,35 +52,27 @@ export default class Room extends EventEmitter{
 
 		this.userInfo = userInfo;
 		
-		// @ts-ignore
-		window.userId = makeId(5);
-		// @ts-ignore
-		console.log(`%c${window.userId}`, 'color: red')
-		
+
 	}
 	
 	// Подключение к комнате
 	private join() {
 
 		this.socket.on('connect', () => {
-			// @ts-ignore
-			this.socket.emit('room:join', {roomId: 1, userId: window.userId});
+			this.socket.emit('room:join', {roomId: 1});
 		})
 		
-		this.socket.on('room:users', (data: string[]) => {
-			
-			console.log('room:users', data);
-			
-			data.forEach(userId => {
-				this.connectTo(userId);
-				this.socket.emit('room:connect', userId);
+		// При получении списка пользователей
+		this.socket.on('room:users', (data: {connectionId: string}[]) => {
+			data.forEach(({connectionId}) => {
+				this.connectTo(connectionId); // резервирование соединения
+				this.socket.emit('room:connect', connectionId); // просим создать обратное подключение
 			})
-			
 		})
 		
-		this.socket.on('room:connect', userId => {
-			console.log('room:connect', userId)
-			this.connectTo(userId)
+		// При кодключении пользователя
+		this.socket.on('room:connect', connectionId => {
+			this.connectTo(connectionId)
 		})
 		
 		/*
@@ -114,7 +106,7 @@ export default class Room extends EventEmitter{
 	/**
 	 * @description Создание нового P2P соединиения с пользователем clientId
 	 * */
-	private async addConnection(clientId: string, polite: boolean) {
+	private addConnection(clientId: string, polite: boolean) {
 		
 		const rtcConnection = new RTCConnection({
 			clientId, tracks: this.getTracks(), polite

@@ -49,7 +49,8 @@ server.listen(config.port,  () => {
 })
 
 
-app.get('*', function (req, res) {
+import identifyUser from "./middlewares/identify-middleware";
+app.get('*', identifyUser, function (req, res) {
     res.sendFile(path.join(frontDir, 'main.html'));
 });
 

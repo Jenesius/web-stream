@@ -1,6 +1,8 @@
 import EventEmitter, {Callback} from "jenesius-event-emitter";
 import useSocket from "@/assets/js/use-socket/use-socket";
 import {Socket} from "socket.io-client";
+import makeId from "@/assets/js/make-id";
+
 
 /**
  * Singleton class. Используется для взаимодействия между подключениями.
@@ -16,16 +18,25 @@ class _SignalingChannel extends EventEmitter{
 	socket: Socket
 	
 	
+	globalConnectionId: string;
 	constructor() {
 		super();
 		
+		this.globalConnectionId = makeId(128);
+		//console.log(`[signaling-channel] ID: %c${this.globalConnectionId}`, 'color: red');
+		//Cookies.set('globalConnectionId', this.globalConnectionId)
+		
+		document.cookie = `globalConnectionId=${this.globalConnectionId}`;
+		console.log(document.cookie);
+		
 		this.socket = useSocket({namespace: 'signals'});
 		this.socket.on('connect', () => {
-			this.msg(`${this.socket.id}`);
+			this.msg(`connected`);
 		})
 		this.socket.on('message', (data: IMessage) => {
 			
-			const strConnect = data.recipient + '' + data.sender;
+			if (!data.sender) return console.log('sender not included.');
+			const strConnect = data.sender;
 
 			
 			console.log(`on message ${strConnect}`);
@@ -33,9 +44,9 @@ class _SignalingChannel extends EventEmitter{
 			this.emit(_SignalingChannel.GET_EVENT_NAME(strConnect), data);
 		})
 		
-		// @ts-ignore
-		window.signalingChannel = this;
+
 		
+
 	}
 	
 	onmessage(strConnect: string, callback: Callback) {
@@ -59,8 +70,8 @@ class _SignalingChannel extends EventEmitter{
 }
 interface IMessage {
 	description?: RTCSessionDescription | null,
-	recipient: string, // Получатель, кому отправили
-	sender: string, // Отправитель. обычно мы
+	recipient: string, // Получатель, кому отправили,
+	sender?: string,
 	candidate?: RTCIceCandidate | null
 }
 

@@ -11,10 +11,10 @@
 
     const isReady = ref(false);
 
-    const nickname = ref('');
+    const nickname = ref<string | undefined>('');
 
     function onReady(data: {nickname?: string, audioinput?: string, audiooutput?: string}) {
-        console.log(data)
+
         nickname.value = data.nickname;
         isReady.value = true;
     }

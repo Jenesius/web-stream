@@ -12,7 +12,9 @@
     "@types/socket.io-client": "^3.0.0",
     "core-js": "^3.8.3",
     "jenesius-event-emitter": "^1.0.0",
+    "js-cookie": "^3.0.1",
     "multistreamsmixer": "^1.2.2",
+    "randomstring": "^1.2.2",
     "socket.io-client": "^4.4.1",
     "vue": "^3.2.13",
     "vue-router": "^4.0.3",
@@ -20,6 +22,7 @@
   },
   "devDependencies": {
     "@types/jest": "^27.0.1",
+    "@types/randomstring": "^1.1.8",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",

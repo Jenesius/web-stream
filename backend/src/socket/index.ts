@@ -6,7 +6,10 @@ import PeerNamespace from "./namespaces/peer-namespace";
 import JournalNamespace from "./namespaces/journal-namespace";
 import GroupNamespace from "./namespaces/group-namespace";
 
-import defaultNamespace from "./namespaces/default-namespace"
+import defaultNamespace from "./namespaces/default-namespace";
+import signalsNamespace from "./namespaces/signals-namespace";
+
+import identifySocketMiddleware from "./../middlewares/identify-socket-middleware";
 
 export default function connectSocket(server: http.Server) {
 
@@ -14,7 +17,12 @@ export default function connectSocket(server: http.Server) {
         cookie: true
     });
 
+
+    
     io.on('connection', s => defaultNamespace(io, s));
+    //io.use(identifySocketMiddleware)
+    io.of('/signals').use(identifySocketMiddleware).on('connection', s => signalsNamespace(io, s));
+    
     
     RoomNamespace(io);
     JournalNamespace(io);

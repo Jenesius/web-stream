@@ -5,24 +5,40 @@ export default (io: Server) => {
 
 
 	const users:{
-		[name: string]: Socket
+		[name: string]: {
+			socket: Socket,
+			userId?: string
+		}
 	} = {};
+	
+	setInterval(() => {
+		//console.log(Object.keys(users).map(a => a.slice(0, 5) ));
+	}, 5 * 1000);
+	
 	/**
 	 * Пользователь создал соединение с room-namespace.
 	 * */
 	io.of('/rooms').on('connection', socket => {
 		
+
+		
 		// При подключении к комнате, сигнализируем всех о новом пользователе
 		socket.on('room:join', (data) => {
 			try {
-				const {roomId, userId} = data;
+				const globalConnectionId = socket.globalConnectionId;
 				
-
-				socket.emit('room:users', Object.keys(users))
+				const {roomId} = data;
+				
+				const prettyArrayUsers = Object.entries(users).map(elem => ({
+					connectionId: elem[0],
+					userId: elem[1].userId,
+				}));
 				socket.join(roomId);
-				socket.broadcast.to(roomId).emit('room:new-connection', {userId});
-				
-				users[userId] = socket;// Saving socket
+				socket.emit('room:users', prettyArrayUsers);
+
+				//socket.broadcast.to(roomId).emit('room:new-connection', {userId});
+				console.log('add connection', globalConnectionId.slice(0, 5) + '...')
+				users[globalConnectionId] = {socket};
 				
 			} catch (e) {
 				console.log(`[room:join]`, e)
@@ -30,30 +46,20 @@ export default (io: Server) => {
 
 		})
 		
-		socket.on('room:connect', userId => {
+		socket.on('room:connect', connectionId => {
+			const globalConnectionId = socket.globalConnectionId;
 			
-			// @ts-ignore
-			const senderId = Object.entries(users).find(a => a[1].id === socket.id)[0];
-			
-			// @ts-ignore
-			users[userId].emit('room:connect', senderId);
+			console.log('[room:connection]', connectionId.slice(0, 5));
+			users[connectionId]?.socket.emit('room:connect', globalConnectionId);
 		})
 		
 
 
 		
 		socket.on('disconnect', () => {
+			const globalConnectionId = socket.globalConnectionId;
+			delete users[globalConnectionId];
 			
-			// @ts-ignore
-			const senderId = Object.entries(users).find(a => a[1].id === socket.id)[0];
-			delete users[senderId];
-			
-			/*
-			
-			socket.broadcast.to(ROOM_NAME).emit('peer:user-leave', {
-				clientId: socket.id
-			})
-			*/
 		})
 		
 
@@ -61,7 +67,7 @@ export default (io: Server) => {
 	
 	io.of('/rooms').adapter.on('leave-room', (room, socketId) => {
 		io.to(room).emit('room:user-leave', socketId)
-		
+
 	});
 
 

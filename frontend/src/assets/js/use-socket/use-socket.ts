@@ -1,5 +1,6 @@
 import {Manager} from "socket.io-client";
 
+
 /**
  * Определение URL по которому будет происходить подключение к сокетам, порт дол
  * жен совпадать с портом указанным в devServer как proxy (Для development mode)

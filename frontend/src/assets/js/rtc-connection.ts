@@ -1,5 +1,5 @@
 import EventEmitter from "./event-emitter";
-import makeId from "./make-id";
+
 import PeerError from "./peer-error";
 import SignalingChannel from "@/assets/js/signaling-channel";
 
@@ -34,7 +34,6 @@ export default class RTCConnection extends EventEmitter{
 		[name: string]: RTCRtpSender
 	} = {};
 	
-	readonly id = makeId(16); // Уникальный нашего идентификатор соединения.
 	
 	private makingOffer = false;
 	private ignoreOffer = false;
@@ -46,7 +45,7 @@ export default class RTCConnection extends EventEmitter{
 	
 	constructor({tracks, clientId, polite}: RTCConnectionParams) {
 		super();
-		this.msg(`new connect %c${this.id}%c to %c${clientId}`, 'color: blue', 'color: black', 'color: green');
+		this.msg(`new connect to %c${clientId}`, 'color: blue', 'color: black', 'color: green');
 		this.polite = polite;
 		
 		this.clientId = clientId;
@@ -92,7 +91,6 @@ export default class RTCConnection extends EventEmitter{
 		this.pc.onicecandidate = ({candidate}) => {
 			SignalingChannel.send({
 				recipient: this.clientId,
-				sender: this.id,
 				candidate
 			})
 		}
@@ -108,7 +106,6 @@ export default class RTCConnection extends EventEmitter{
 				await this.pc.setLocalDescription();
 				SignalingChannel.send({
 					recipient: this.clientId,
-					sender: this.id,
 					description: this.pc.localDescription
 				})
 			} catch (e) {
@@ -143,7 +140,7 @@ export default class RTCConnection extends EventEmitter{
 					await this.pc.setRemoteDescription(description);
 					if (description.type == "offer") {
 						await this.pc.setLocalDescription();
-						SignalingChannel.send({ sender: this.id, recipient: this.clientId, description: this.pc.localDescription })
+						SignalingChannel.send({ recipient: this.clientId, description: this.pc.localDescription })
 					}
 				} else if (candidate) {
 					try {
@@ -163,7 +160,7 @@ export default class RTCConnection extends EventEmitter{
 	
 	get _index() {
 		console.warn('_index deprecated. Use id.');
-		return this.id;
+		return this.clientId;
 	}
 	
 	/**
