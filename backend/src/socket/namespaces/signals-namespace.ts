@@ -9,14 +9,6 @@ export default (io: Server, socket: Socket) => {
 	const globalConnectionId = socket.globalConnectionId;
 	store[globalConnectionId] = socket;
 	
-
-	try {
-		console.log(globalConnectionId.slice(0, 5));
-		
-	}catch (e) {
-	
-	}
-	
 	socket.on('message', (data: {recipient: string}) => {
 		const globalConnectionId = socket.globalConnectionId;
 		// Запомнили, кому отправляет сообщение

@@ -7,6 +7,7 @@ import {MediaManager} from "./media-manager";
 import {UserConnectionInfo} from "@/assets/js/types/user-types";
 import useSocket from "@/assets/js/use-socket/use-socket";
 import makeId from "@/assets/js/make-id";
+import AudioSystem from "@/assets/js/audio-system";
 
 export default class Room extends EventEmitter{
 	
@@ -111,6 +112,14 @@ export default class Room extends EventEmitter{
 		const rtcConnection = new RTCConnection({
 			clientId, tracks: this.getTracks(), polite
 		})
+		
+		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => this.emit('update'))
+		
+		function tt(s: MediaStream) {
+			AudioSystem.addStream(s);
+		}
+		rtcConnection.on('test-audio', tt);
+		
 		this.connections[clientId] = rtcConnection;
 		
 	}

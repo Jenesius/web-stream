@@ -7,7 +7,8 @@ import detenv from "dotenv";
 import log4js from "log4js";
 import {useRouter} from "./routes";
 import bodyParser 	from "body-parser";
-import cookieParser from 'cookie-parser'
+import cookieParser from 'cookie-parser';
+import proxy from "express-http-proxy";
 
 // getting-started.js
 import mongoose from "mongoose";
@@ -50,10 +51,14 @@ server.listen(config.port,  () => {
 
 
 import identifyUser from "./middlewares/identify-middleware";
+app.use(identifyUser)
+app.get('*', proxy('http://localhost:8080/main'))
+/*
 app.get('*', identifyUser, function (req, res) {
+    console.log('_');
     res.sendFile(path.join(frontDir, 'main.html'));
 });
-
+*/
 app.on('error', (err) => {
     console.warn('on error app',err);
 })

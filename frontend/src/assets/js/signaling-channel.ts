@@ -17,17 +17,11 @@ class _SignalingChannel extends EventEmitter{
 	
 	socket: Socket
 	
-	
-	globalConnectionId: string;
+
 	constructor() {
 		super();
-		
-		this.globalConnectionId = makeId(128);
-		//console.log(`[signaling-channel] ID: %c${this.globalConnectionId}`, 'color: red');
-		//Cookies.set('globalConnectionId', this.globalConnectionId)
-		
-		document.cookie = `globalConnectionId=${this.globalConnectionId}`;
-		console.log(document.cookie);
+
+
 		
 		this.socket = useSocket({namespace: 'signals'});
 		this.socket.on('connect', () => {
@@ -37,9 +31,6 @@ class _SignalingChannel extends EventEmitter{
 			
 			if (!data.sender) return console.log('sender not included.');
 			const strConnect = data.sender;
-
-			
-			console.log(`on message ${strConnect}`);
 			
 			this.emit(_SignalingChannel.GET_EVENT_NAME(strConnect), data);
 		})
@@ -55,7 +46,6 @@ class _SignalingChannel extends EventEmitter{
 	}
 	
 	send(params: IMessage) {
-		this.msg(`sending message ${JSON.stringify(params)}`)
 		
 		// @ts-ignore
 		params.sender = window.userId;

@@ -50,7 +50,7 @@ export default class RTCConnection extends EventEmitter{
 		
 		this.clientId = clientId;
 		
-		const iceServers = [{ urls: "stun:stun.l.google.com:19302" }];
+		const iceServers = [{ urls: "stun:stun.zadarma.com:3478" }];
 		
 		this.peerConnection = new RTCPeerConnection({
 			iceServers,
@@ -121,11 +121,7 @@ export default class RTCConnection extends EventEmitter{
 		
 		
 		// @ts-ignore
-		SignalingChannel.onmessage(window.userId + '' + this.clientId, async ({ description, candidate }) => {
-			
-			this.msg(`on message, d: ${!!description}, c: ${!!candidate}`)
-
-	
+		SignalingChannel.onmessage(this.clientId, async ({ description, candidate }) => {
 			
 			try {
 				if (description) {
