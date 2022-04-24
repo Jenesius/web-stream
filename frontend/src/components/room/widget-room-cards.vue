@@ -16,10 +16,10 @@
         >
             <widget-room-user-screen
                 v-for="user in filterArray"
-                :key = "user.connection.id"
+                :key = "user.connection.clientId"
                 :user = "user"
 
-                @fullscreen = "onFullScreen(user.connection.id)"
+                @fullscreen = "onFullScreen(user.connection.clientId)"
             />
         </div>
 
@@ -39,14 +39,14 @@
         users: {connection: RTCConnection, userInfo: UserConnectionInfo}[],
     }>()
 
-    const [fullscreenConnectionId, onFullScreen] = useRoomCards(computed(() => props.users))
+    const [fullscreenConnectionId, onFullScreen] = useRoomCards()
 
     const filterArray = computed(() => {
-        return props.users.filter(c => c.connection.id !== fullscreenConnectionId.value)
+        return props.users.filter(c => c.connection.clientId !== fullscreenConnectionId.value)
     })
 
     const activeConnection = computed(
-        () => props.users.find(c => c.connection.id === fullscreenConnectionId.value)
+        () => props.users.find(c => c.connection.clientId === fullscreenConnectionId.value)
     );
 
     const refContainer = ref<HTMLElement>();
@@ -68,6 +68,7 @@
 
          */
         gap: 10px;
+        height: 100%;
 
     }
     .room-cards__list{
@@ -84,7 +85,7 @@
     }
     .room-cards__fullscreen{
         display: grid;
-        align-content: baseline;
+
         /*
         grid-template-rows: 1fr;
         grid-template-columns: 1fr;

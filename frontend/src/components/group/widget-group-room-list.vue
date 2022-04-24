@@ -7,6 +7,10 @@
 
         <div>
 
+            <div>
+
+            </div>
+
         </div>
 
         <div class = "room-list__bottom">

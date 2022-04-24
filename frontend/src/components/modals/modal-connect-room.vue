@@ -1,6 +1,9 @@
 <template>
-    <p> Now u will be connected to room {{id}}</p>
-    <button @click = "apply">connect</button>
+    <div>
+        <p> Now u will be connected to room {{id}}</p>
+        <button @click = "apply">connect</button>
+
+    </div>
 </template>
 
 <script setup lang = 'ts'>

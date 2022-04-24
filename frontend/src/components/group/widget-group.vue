@@ -6,7 +6,6 @@
             <widget-group-chat/>
         </div>
 
-        <div class = "widget-group__size"></div>
 
     </div>
 </template>
@@ -22,15 +21,15 @@
 
 <style scoped>
     .widget-group{
+        padding: 20px;
         display: grid;
-        grid-template-columns: 1fr 300px;
+        grid-template-columns: minmax(400px, 800px) 300px;
         grid-template-rows: 1fr;
 
         height: 100%;
-        padding: 0 20px;
     }
     .widget-group__main{
         display: grid;
-        grid-template-rows: min-content 1fr;
+        grid-template-rows: 60px 1fr;
     }
 </style>

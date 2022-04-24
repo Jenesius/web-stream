@@ -333,7 +333,10 @@ export default class RTCConnection extends EventEmitter{
 	
 
 	private msg(text: string, ...any: any) {
-		console.log(`[%cpeer:${this._index}%c] ${text}`, 'color: green', 'color: black', ...any);
+		
+		const identifier = this.clientId?.slice(0, 5)
+		
+		console.log(`[%cpeer:${identifier}%c] ${text}`, 'color: green', 'color: black', ...any);
 	}
 	
 

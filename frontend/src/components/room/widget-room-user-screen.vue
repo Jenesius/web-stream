@@ -60,10 +60,12 @@
         if (videoTrack) {
 
             const settings = videoTrack.getSettings();
-            const {width, height} = settings;
+            const {width, height, aspectRatio} = settings;
 
-            if (width && height)
+            if (width && height && aspectRatio)
 
+
+/*
                 if (width > height) {
                     videoCssSize.width = "100%";
                     videoCssSize.height = "auto";
@@ -71,7 +73,7 @@
                     videoCssSize.width = "auto";
                     videoCssSize.height = "size";
                 }
-
+*/
             console.log(settings);
 
 
@@ -118,11 +120,14 @@
 
 <style scoped>
     .user-screen{
+        display: flex;
+        align-items: center;
+        justify-content: center;
         position: relative;
 
         padding: 2px;
         border-radius: 5px;
-        background-color: red;
+        background-color: var(--color-dark-primary);
 
     }
 
@@ -135,6 +140,10 @@
     }
     .user-screen__video{
         border-radius: 8px;
+        object-fit: fill;
+        height: 100%;
+        width: 100%;
+        position: absolute;
     }
 
     .user-screen__bottom{

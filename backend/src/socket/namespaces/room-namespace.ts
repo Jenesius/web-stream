@@ -24,8 +24,6 @@ export default (io: Server, socket: Socket) => {
 			socket.join(roomId);
 			socket.emit('room:users', prettyArrayUsers);
 			
-			//socket.broadcast.to(roomId).emit('room:new-connection', {userId});
-			
 			users[globalConnectionId] = {socket};
 			
 		} catch (e) {
@@ -36,8 +34,6 @@ export default (io: Server, socket: Socket) => {
 	
 	socket.on('room:connect', connectionId => {
 		const globalConnectionId = socket.globalConnectionId;
-		
-		console.log('[room:connection]', connectionId.slice(0, 5));
 		users[connectionId]?.socket.emit('room:connect', globalConnectionId);
 	})
 	
@@ -47,7 +43,6 @@ export default (io: Server, socket: Socket) => {
 	socket.on('disconnect', () => {
 		const globalConnectionId = socket.globalConnectionId;
 		delete users[globalConnectionId];
-		
 	})
 
 
