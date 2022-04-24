@@ -33,38 +33,33 @@ class SingletonAudioSystem extends EventEmitter{
 		this.context = new AudioContext();
 	}
 	
+	/**
+	 * Добавляет трек в ауди-систему.
+	 * На данный момент сделано через жопу. AudioContext вприцныпе не работает.
+	 * Основные проблемы описаны в методе addStream
+	 * */
 	async addTrack(track: MediaStreamTrack) {
-		
 		this.msg(`adding track ${track.id}`)
-		
 		if (!this.context) throw AudioSystemError.AudioContextNotFounded(this);
 		
 		try {
 			await this.context.resume();
 			
-			console.log(track);
-			this.tracks.push(track);
+			const audio = new Audio();
+			const mediaStream = new MediaStream([track]);
+			audio.srcObject = mediaStream;
+			const context = this.context;
 			
-			track.contentHint = "speech"
-			
-			const mediaSource = this.context.createMediaStreamSource(new MediaStream([track]));
-			
-			mediaSource.connect(this.context.destination);
-			
-			
-			
-			// connect the AudioBufferSourceNode to the gainNode
-			// and the gainNode to the destination, so we can play the
-			// music and adjust the volume using the mouse cursor
-			
-			track.addEventListener('ended', () => {
-				this.removeTrack(track.id);
-			})
+			audio.onloadedmetadata = () => {
+				audio.play();
+				//audio.muted = true;
+				const a = context.createMediaElementSource(audio);
+				a.connect(context.destination);
+			}
+
 		} catch (e) {
 			this.msg(JSON.stringify(e));
 		}
-
-		
 	}
 
 	removeTrack(id: string) {

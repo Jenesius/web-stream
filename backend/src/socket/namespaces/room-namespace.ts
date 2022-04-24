@@ -37,16 +37,9 @@ export default (io: Server, socket: Socket) => {
 		users[connectionId]?.socket.emit('room:connect', globalConnectionId);
 	})
 	
-	
-	
-	
 	socket.on('disconnect', () => {
 		const globalConnectionId = socket.globalConnectionId;
 		delete users[globalConnectionId];
 	})
-
-
-
-
 
 }

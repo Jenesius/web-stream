@@ -40,6 +40,7 @@
     import {computed, onMounted, reactive} from "vue";
     import WidgetInputSelect from "@/components/inputs/WidgetInputSelect.vue";
     import {useStore} from "vuex";
+    import AudioSystem from "@/assets/js/audio-system";
 
     const store = useStore();
 
@@ -66,7 +67,7 @@
         }
     ]
     function handleClick() {
-
+        AudioSystem.init();
         emit('ready', state)
     }
 

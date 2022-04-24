@@ -6,13 +6,13 @@ import RTCConnection from "./rtc-connection";
 import {MediaManager} from "./media-manager";
 import {UserConnectionInfo} from "@/assets/js/types/user-types";
 import useSocket from "@/assets/js/use-socket/use-socket";
-import makeId from "@/assets/js/make-id";
 import AudioSystem from "@/assets/js/audio-system";
 
 export default class Room extends EventEmitter{
 	
+	socket: Socket; // Сокет для работы с комнатой
 	
-	socket: Socket
+	
 	connections: {
 		[name: string]: RTCConnection
 	} = new Proxy({}, {
@@ -49,19 +49,7 @@ export default class Room extends EventEmitter{
 		super();
 		this.socket = useSocket({namespace: 'rooms'});
 		
-		this.join();
-
 		this.userInfo = userInfo;
-		
-
-	}
-	
-	// Подключение к комнате
-	private join() {
-
-		this.socket.on('connect', () => {
-			this.socket.emit('room:join', {roomId: 1});
-		})
 		
 		// При получении списка пользователей
 		this.socket.on('room:users', (data: {connectionId: string}[]) => {
@@ -71,62 +59,43 @@ export default class Room extends EventEmitter{
 			})
 		})
 		
-		// При кодключении пользователя
+		// При попытке подключится к нам
 		this.socket.on('room:connect', connectionId => {
 			this.connectTo(connectionId)
 		})
 		
-		/*
-		this.socket.on('room:new-connection', (data: {userId: string}) => {
-			const userId = data.userId;
-			this.msg(`new connection ${userId}`)
-			this.connectTo(userId);
-			
-			this.socket.emit('room:new-connection-reserved', {userId});
-		})
-		this.socket.on('room:new-connection-reserved', (data: {userId: string}) => {
-			const userId = data.userId;
-			this.msg(`new-connection-reserved ${userId}`)
-			this.connectTo(userId);
-		})
-		*/
 		this.socket.on('room:user-leave', this.removeConnect.bind(this));
+		
+		this.socket.on('connect', () => {
+			this.socket.emit('room:join', {roomId: 1});
+		})
+	}
+	
 
-	}
-	
-	addUser(rtcConnection: RTCConnection){
-		const clientId:string = rtcConnection.clientId;
-		this.connections[clientId] = rtcConnection;
-		this.emit('update');
-	}
-	removeUser(clientId: string) {
-		delete this.connections[clientId];
-		this.emit('update');
-	}
-	
+
 	/**
 	 * @description Создание нового P2P соединиения с пользователем clientId
 	 * */
 	private addConnection(clientId: string, polite: boolean) {
-		
 		const rtcConnection = new RTCConnection({
 			clientId, tracks: this.getTracks(), polite
 		})
 		
-		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => this.emit('update'))
-		
-		function tt(s: MediaStream) {
-			AudioSystem.addStream(s);
-		}
-		rtcConnection.on('test-audio', tt);
+		rtcConnection.on(RTCConnection.EVENT_TRACKS_UPDATE, () => {
+			// Проходим по аудио трекам
+			rtcConnection.tracks.forEach(track => {
+				if (track.kind === 'audio') AudioSystem.addTrack(track);
+			})
+			this.emit('update');
+		})
 		
 		this.connections[clientId] = rtcConnection;
-		
 	}
 	
 	
 	removeConnect({clientId}: {clientId: string}) {
-		this.removeUser(clientId);
+		delete this.connections[clientId];
+		this.emit('update');
 	}
 	
 	/**
@@ -148,13 +117,9 @@ export default class Room extends EventEmitter{
 	 * мы являемся инициаторами
 	 * */
 	connectTo(clientId: string) {
-		
 		const connection = this.getConnection(clientId);
-		
 		if (!connection || connection.closed) return this.addConnection(clientId, true);
-		
 		connection.updateTracks(this.getTracks());
-		console.log('Offer на уже устанолвенный коннект')
 	}
 
 
