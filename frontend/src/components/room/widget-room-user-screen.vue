@@ -1,7 +1,7 @@
 <template>
     <div class= "user-screen">
         <p class = "user-screen__full-name">{{user.userInfo?.nickname}}</p>
-        <video class = "user-screen__video" ref = "refVideo"  autoPlay muted />
+        <video class = "user-screen__video" ref = "refVideo" :style = "videoCssSize"  autoPlay muted />
 
         <div class = "user-screen__bottom">
 
@@ -23,7 +23,7 @@
 <script setup lang = "ts">
 
     import RTCConnection from "@/assets/js/rtc-connection";
-    import {onMounted, onUnmounted, ref, inject} from "vue";
+    import {onMounted, onUnmounted, ref, inject, reactive} from "vue";
     import Icon from "@/components/icon/icon.vue";
     import {UserConnectionInfo} from "@/assets/js/types/user-types";
     const props = defineProps<{
@@ -38,6 +38,10 @@
     }>()
     const refVideo = ref<HTMLVideoElement | null>(null);
 
+    const videoCssSize = reactive({
+        height: '100%',
+        width: '100%'
+    })
 
 
 
@@ -54,6 +58,23 @@
         isAudio.value = !!audioTrack;
 
         if (videoTrack) {
+
+            const settings = videoTrack.getSettings();
+            const {width, height} = settings;
+
+            if (width && height)
+
+                if (width > height) {
+                    videoCssSize.width = "100%";
+                    videoCssSize.height = "auto";
+                } else {
+                    videoCssSize.width = "auto";
+                    videoCssSize.height = "size";
+                }
+
+            console.log(settings);
+
+
             m.addTrack(videoTrack);
 
         }
@@ -101,7 +122,7 @@
 
         padding: 2px;
         border-radius: 5px;
-        background-color: #ebebeb;
+        background-color: red;
 
     }
 
@@ -114,8 +135,6 @@
     }
     .user-screen__video{
         border-radius: 8px;
-        width: 100%;
-        height: 100%;
     }
 
     .user-screen__bottom{

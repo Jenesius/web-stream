@@ -26,11 +26,13 @@
         transition: 0.1s background-color;
     }
     .room-panel-item_active{
-        background-color: var(--area-bold);
-        color: var(--primary);
+        background-color: var(--color-dark-primary);
+        color: var(--color-main);
     }
     .room-panel-item:hover{
-        background-color: var(--area-sub);
+        background-color: var(--color-light-secondary);
     }
-
+    .room-panel-item_active:hover{
+        background-color: var(--color-dark-secondary);
+    }
 </style>

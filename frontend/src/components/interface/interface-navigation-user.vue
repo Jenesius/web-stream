@@ -1,33 +1,29 @@
 <template>
     <div class = "navigation-user-wrap">
-        <div class = "navigation-user">
-            <span class = "navigation-user__short-name">Д</span>
-        </div>
+        <icon class = "icon__user" name = "user"/>
     </div>
 </template>
 
 <script setup>
 
+import Icon from "@/components/icon/icon";
 </script>
 
 <style scoped>
-    .navigation-user{
-        background-color: black;
-        border-radius: 4px;
-        padding: 10px;
-        height: 46px;
-        width: 46px;
-        display: grid;
-        place-content: center;
-    }
-    .navigation-user__short-name{
-        color: white;
-        font-size: 16px;
-        line-height: 16px;
+    .icon__user{
+        font-size: 22px;
+        transition: 0.2s transform;
+        color: var(--color-dark-primary);
     }
     .navigation-user-wrap{
         padding: 10px 0;
         display: flex;
         justify-content: center;
+        cursor: pointer;
     }
+    .navigation-user-wrap:hover .icon__user{
+        transform: translateY(-7px);
+    }
+
+
 </style>

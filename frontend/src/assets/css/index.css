@@ -13,16 +13,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 
 
-    --area: #f7f7f7;
-    --area-sub: #f0f0f0;
-    --area-bold: #e9e9e9;
 
-    --primary: #0f6fde;
-    --area-dark: #C2C1C1;
-
-    --text-color-primary: #212121;
-    --text-color-secondary: #737373;
-
+    --color-dark-primary: #212121;
+    --color-dark-secondary: #424242;
+    --color-light-primary: white;
+    --color-light-secondary: #f1f1f1;
+    --color-main: #0f6fde;
 }
 * {
     box-sizing: border-box;

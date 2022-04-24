@@ -74,12 +74,9 @@
         display: grid;
         justify-content: center;
 
-        flex-wrap: wrap;
         gap: 10px;
-    }
-
-    .room-cards__list{
         grid-template-columns: repeat(auto-fit, 500px);
+        grid-template-rows: 200px;
     }
     .room-card__list_short{
         grid-template-columns: 1fr;

@@ -118,9 +118,9 @@
     }
     .widget-room__container-panel{
         height: var(--room-size-bottom);
-        display: grid;
-        justify-content: center;
 
+        display: flex;
+        justify-content: center;
     }
 
 </style>

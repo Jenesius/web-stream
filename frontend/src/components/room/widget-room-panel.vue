@@ -1,24 +1,28 @@
 <template>
     <div class = "widget-room-panel">
-        <widget-room-panel-item
+
+        <icon
             v-for = "(item, index) in array"
             :key = "index"
 
             :name = "item.icon"
             @click = "item.callback"
+
             :active = "item.active"
         />
+
+        <icon name ="phone-slash" class = "room-panel__exist"/>
+
     </div>
 </template>
 
 <script setup lang = "ts">
 
-    import WidgetRoomPanelItem
-        from "@/components/room/widget-room-panel-item.vue";
     import {MediaManager}
         from "@/assets/js/media-manager";
     import {computed} from "vue";
     import {useStore} from "vuex";
+    import Icon from "@/components/icon/icon.vue";
 
     const store = useStore();
 
@@ -45,11 +49,31 @@
 <style scoped>
     .widget-room-panel{
         display: flex;
+
         height: 45px;
 
-        align-items: center;
-        border: 1px solid #C2C1C1;
+        border: 1px solid var(--color-dark-primary);
         border-radius: 7px;
         overflow: hidden;
+    }
+    .widget-room-panel>i{
+        width: 66px;
+        height: 100%;
+        display: grid;
+        place-content: center;
+        cursor: pointer;
+    }
+    .widget-room-panel>i[active="true"] {
+        background-color: var(--color-dark-primary);
+        color: var(--color-main);
+    }
+    .widget-room-panel>i:hover{
+        background-color: var(--color-light-secondary);
+    }
+    .widget-room-panel>i[active="true"]:hover{
+        background-color: var(--color-dark-secondary);
+    }
+    .room-panel__exist{
+        color: red;
     }
 </style>
